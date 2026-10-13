@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Lumina Reserve</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        body { background-color: #0d0d0d; color: #f1f1f1; }
+        .navbar { background-color: #1a1a1a !important; border-bottom: 1px solid #333; justify-content: center;}
+        
+        /* Lumina Reserve como logo principal */
+        .navbar-brand { color: #d4af37 !important; font-weight: bold; font-size: 1.8rem; margin-right: 40px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px;}
+        .navbar-brand:hover { color: #fff !important; }
+        
+        /* Agendar Cita en dorado */
+        .nav-link { color: #d4af37 !important; font-weight: bold; font-size: 1.2rem; margin: 0 10px; border: 1px solid #d4af37; border-radius: 5px; padding: 8px 15px !important; transition: 0.3s;}
+        .nav-link:hover { background-color: #d4af37; color: black !important;}
+        
+        footer { background-color: #1a1a1a; color: #888; border-top: 1px solid #333; text-align: center; }
+        
+        /* Modal para Coming Soon */
+        .modal-coming-soon { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content-cs { background: #1a1a1a; padding: 40px; border-radius: 12px; border: 2px solid #d4af37; text-align: center; color: white; max-width: 400px; }
+        .btn-cerrar-modal { background: #d4af37; color: black; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; margin-top: 20px; cursor: pointer; transition: 0.2s;}
+        .btn-cerrar-modal:hover { background: #b5952f; transform: scale(1.05);}
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark mb-4">
+            <div class="container-fluid d-flex justify-content-center align-items-center">
+                <!-- Enlace al inicio / Logo -->
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LUMINA RESERVE</a>
+                
+                <ul class="navbar-nav">
+                    <!-- Ya no hay botón de inicio, solo Agendar Cita en dorado -->
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="AgendarCita">Agendar Cita</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Modal Próximamente (Global para poder llamarlo desde cualquier vista) -->
+    <div id="modalCS" class="modal-coming-soon">
+        <div class="modal-content-cs">
+            <h2 style="color: #d4af37;">¡Próximamente!</h2>
+            <p>Esta sección estará disponible muy pronto en nuestra próxima actualización.</p>
+            <button class="btn-cerrar-modal" onclick="cerrarComingSoon()">Entendido</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted mt-5">
+        <div class="container py-3">
+            &copy; 2026 - Lumina Reserve - Tuxtla Gutiérrez, Chiapas
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Funciones globales para el modal
+        function mostrarComingSoon() { document.getElementById('modalCS').style.display = 'flex'; }
+        function cerrarComingSoon() { document.getElementById('modalCS').style.display = 'none'; }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
