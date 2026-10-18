@@ -1,7 +1,6 @@
 @{
-    ViewData["Title"] = "Agendamiento";
+    ViewData["Title"] = "Agendar Cita";
 }
-
 <style>
     .lumina-container { display: flex; flex-wrap: wrap; gap: 20px; padding: 0 20px 20px 20px; max-width: 1200px; margin: auto; }
     .card { background-color: #1a1a1a; padding: 25px; border-radius: 12px; border: 1px solid #333; }
@@ -11,7 +10,6 @@
     
     .titulo-seccion { font-size: 1.3rem; color: #d4af37; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; font-weight: bold;}
     
-    /* Acordeones para categorías de servicios */
     .categoria-btn { width: 100%; background: #222; color: #d4af37; border: 1px solid #333; padding: 15px; border-radius: 8px; text-align: left; font-weight: bold; font-size: 1.1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; transition: 0.3s;}
     .categoria-btn:hover { background: #2a2a2a; }
     .categoria-contenido { display: none; padding: 10px 0 15px 0; }
@@ -22,180 +20,119 @@
     .servicio-item.selected { border-color: #d4af37; background-color: rgba(212, 175, 55, 0.1); }
     .precio { font-weight: bold; color: #d4af37; font-size: 1.1rem;}
     .form-check-input { width: 22px; height: 22px; margin-right: 15px; cursor: pointer; accent-color: #d4af37;}
-
-    /* Inputs de Fecha y Hora modernos */
+    
     .input-grupo { margin-bottom: 20px; }
     .input-label { display: block; color: #aaa; margin-bottom: 8px; font-size: 0.9rem;}
     .input-oscuro { background: #262626; color: white; border: 1px solid #444; padding: 12px; border-radius: 6px; width: 100%; color-scheme: dark; font-family: 'Segoe UI', sans-serif; cursor: pointer; font-size: 1rem;}
     .input-oscuro:focus { outline: none; border-color: #d4af37; }
     
-    .btn-fechas { background: #262626; color: white; border: 1px solid #444; padding: 10px 20px; border-radius: 6px; margin: 5px 5px 5px 0; cursor: pointer; transition: 0.2s; }
-    .btn-fechas.active { background: #d4af37; color: black; font-weight: bold; }
-    
     .btn-confirmar { width: 100%; background: #d4af37; color: black; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 20px; transition: 0.3s;}
     .btn-confirmar:hover { background: #b5952f; transform: scale(1.02);}
 
-    /* Galería de cortes */
-    .galeria-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
-    .img-corte { width: 100%; height: 140px; border-radius: 8px; object-fit: cover; border: 1px solid #333; transition: 0.3s;}
-    .img-corte:hover { transform: scale(1.05); border-color: #d4af37;}
+    /* Estilo para los selectores de sucursal */
+    .radio-sucursal { display: flex; gap: 15px; margin-top: 10px; margin-bottom: 25px;}
+    .radio-sucursal label { background: #262626; padding: 10px 15px; border-radius: 6px; cursor: pointer; border: 1px solid #444; color: white; display: flex; align-items: center; gap: 10px; transition: 0.2s;}
+    .radio-sucursal label:hover { border-color: #d4af37;}
+    .radio-sucursal input[type="radio"] { accent-color: #d4af37; width: 18px; height: 18px;}
 </style>
 
 <div class="lumina-container">
-    <!-- Columna 1: Info de la Barbería y Galería -->
+    <!-- COLUMNA 1: Info, Sucursal y Barbero -->
     <div class="col-negocio card">
-        <h2 style="color: white; margin-bottom: 5px;">Distrito Barbershop</h2>
-        <p style="color: #888; font-size: 0.95rem;">⭐ 4.9 (120 reseñas) · Barbería<br>Tuxtla Gutiérrez, Chiapas, MX</p>
+        <h2 style="color: white; margin-bottom: 5px;">Lumina Reserve</h2>
+        <p style="color: #888; font-size: 0.95rem;">⭐ 4.9 (120 reseñas) · Barbería Premium<br>Tuxtla Gutiérrez, Chiapas, MX</p>
         
-        <h4 style="color: #d4af37; margin-top: 30px; font-size: 1.1rem; border-bottom: 1px solid #333; padding-bottom: 10px;">Nuestros Trabajos</h4>
-        <div class="galeria-grid">
-            <!-- Imágenes representativas de cortes -->
-            <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&q=80" alt="Corte Desvanecido" class="img-corte">
-            <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&q=80" alt="Arreglo de Barba" class="img-corte">
-            <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&q=80" alt="Corte Clásico" class="img-corte">
-            <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80" alt="Estilo Moderno" class="img-corte">
+        <h4 style="color: #d4af37; margin-top: 30px; font-size: 1.1rem; border-bottom: 1px solid #333; padding-bottom: 10px;">Tu Ubicación y Profesional</h4>
+        
+        <!-- NUEVO: Selector de Sucursal -->
+        <label class="input-label" style="margin-top: 15px;">1. Elige tu sucursal:</label>
+        <div class="radio-sucursal">
+            <label>
+                <input type="radio" name="sucursal" value="Centro" onchange="filtrarBarberos()" checked>
+                Centro
+            </label>
+            <label>
+                <input type="radio" name="sucursal" value="Plaza" onchange="filtrarBarberos()">
+                Plaza
+            </label>
+        </div>
+
+        <!-- Selector de Barbero (Se actualiza con JS) -->
+        <div class="input-grupo">
+            <label class="input-label">2. ¿Con quién deseas agendar?</label>
+            <select id="selector-barbero" class="input-oscuro" onchange="actualizarResumen()">
+                <!-- Las opciones se inyectan dinámicamente con JavaScript -->
+            </select>
+        </div>
+        
+        <div style="background: rgba(212, 175, 55, 0.1); border-left: 3px solid #d4af37; padding: 10px; margin-top: 20px;">
+            <p style="color: #ccc; font-size: 0.85rem; margin: 0; line-height: 1.4;">
+                <span style="color: #d4af37;">📅 <strong>Disponibilidad Inteligente:</strong></span><br>
+                El sistema verificará que el barbero seleccionado esté libre en la hora elegida para evitar conflictos.
+            </p>
         </div>
     </div>
 
-    <!-- Columna 2: Selección de Servicios y Horarios -->
+    <!-- COLUMNA 2: Todos los Servicios y Horarios -->
     <div class="col-servicios card">
         <h3 class="titulo-seccion">1. Selecciona tus servicios</h3>
         
-        <!-- Categoría: Cortes de Cabello -->
-        <button class="categoria-btn" onclick="toggleCategoria('cat-cortes')">
-            ✂️ Cortes de Cabello <span>▼</span>
-        </button>
+        <!-- Cortes -->
+        <button class="categoria-btn" onclick="toggleCategoria('cat-cortes')">✂️ Cortes en Tendencia <span>▼</span></button>
         <div id="cat-cortes" class="categoria-contenido show">
-            <label class="servicio-item" onclick="toggleServicio(this, 180, 'Corte Clásico')">
-                <div style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="checkbox" value="Corte Clásico">
-                    <div>
-                        <strong>Corte Clásico</strong>
-                        <p style="margin: 0; color: #aaa; font-size: 0.85rem;">Tijera o máquina - 30 min</p>
-                    </div>
-                </div>
-                <div class="precio">$180</div>
-            </label>
-            <label class="servicio-item" onclick="toggleServicio(this, 220, 'Corte Fade / Desvanecido')">
-                <div style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="checkbox" value="Corte Fade / Desvanecido">
-                    <div>
-                        <strong>Corte Fade / Desvanecido</strong>
-                        <p style="margin: 0; color: #aaa; font-size: 0.85rem;">Degradado perfecto - 45 min</p>
-                    </div>
-                </div>
-                <div class="precio">$220</div>
-            </label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Familia Fade" onchange="toggleServicioCheckbox(this, 180, 'Familia Fade')"><div><strong>Familia Fade</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Low, Mid, High, Taper o Burst Fade</p></div></div><div class="precio">$180</div></label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Textured Crop" onchange="toggleServicioCheckbox(this, 200, 'Textured Crop')"><div><strong>Textured Crop (French)</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Textura desordenada y flequillo</p></div></div><div class="precio">$200</div></label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Modern Mullet" onchange="toggleServicioCheckbox(this, 220, 'Modern Mullet')"><div><strong>Modern Mullet</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Volumen arriba y longitud en nuca</p></div></div><div class="precio">$220</div></label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Corte Brócoli" onchange="toggleServicioCheckbox(this, 250, 'Corte Brócoli')"><div><strong>Corte Brócoli (Zoomer)</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Rizos con volumen hacia la frente</p></div></div><div class="precio">$250</div></label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Buzz Cut" onchange="toggleServicioCheckbox(this, 150, 'Buzz Cut')"><div><strong>Buzz Cut (Rapado)</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Militar ultra corto con degradado</p></div></div><div class="precio">$150</div></label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Quiff Texturizado" onchange="toggleServicioCheckbox(this, 200, 'Quiff Texturizado')"><div><strong>Quiff Texturizado</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Acabado mate, despeinado y volumen</p></div></div><div class="precio">$200</div></label>
         </div>
 
-        <!-- Categoría: Arreglo de Barba -->
-        <button class="categoria-btn" onclick="toggleCategoria('cat-barba')">
-            🧔 Arreglo de Barba <span>▼</span>
-        </button>
+        <!-- Barbas -->
+        <button class="categoria-btn" onclick="toggleCategoria('cat-barba')">🧔 Arreglo de Barba <span>▼</span></button>
         <div id="cat-barba" class="categoria-contenido">
-            <label class="servicio-item" onclick="toggleServicio(this, 150, 'Perfilado de Barba')">
-                <div style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="checkbox" value="Perfilado de Barba">
-                    <div>
-                        <strong>Perfilado de Barba</strong>
-                        <p style="margin: 0; color: #aaa; font-size: 0.85rem;">Alineación con navaja - 20 min</p>
-                    </div>
-                </div>
-                <div class="precio">$150</div>
-            </label>
-            <label class="servicio-item" onclick="toggleServicio(this, 200, 'Barba Premium con Toalla')">
-                <div style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="checkbox" value="Barba Premium con Toalla">
-                    <div>
-                        <strong>Barba Premium con Toalla</strong>
-                        <p style="margin: 0; color: #aaa; font-size: 0.85rem;">Toalla caliente, aceites y masaje - 35 min</p>
-                    </div>
-                </div>
-                <div class="precio">$200</div>
-            </label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input" type="checkbox" value="Perfilado de Barba" onchange="toggleServicioCheckbox(this, 150, 'Perfilado de Barba')"><div><strong>Perfilado de Barba</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Alineación perfecta con navaja</p></div></div><div class="precio">$150</div></label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input" type="checkbox" value="Barba Premium" onchange="toggleServicioCheckbox(this, 200, 'Barba Premium')"><div><strong>Barba Premium con Toalla</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Toalla caliente, aceites y masaje</p></div></div><div class="precio">$200</div></label>
         </div>
 
-        <!-- Categoría: Masajes y Faciales -->
-        <button class="categoria-btn" onclick="toggleCategoria('cat-faciales')">
-            💆 Masajes y Faciales <span>▼</span>
-        </button>
+        <!-- Faciales -->
+        <button class="categoria-btn" onclick="toggleCategoria('cat-faciales')">💆 Masajes y Faciales <span>▼</span></button>
         <div id="cat-faciales" class="categoria-contenido">
-            <label class="servicio-item" onclick="toggleServicio(this, 180, 'Limpieza Facial Express')">
-                <div style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="checkbox" value="Limpieza Facial Express">
-                    <div>
-                        <strong>Limpieza Facial Express</strong>
-                        <p style="margin: 0; color: #aaa; font-size: 0.85rem;">Exfoliación y mascarilla negra - 25 min</p>
-                    </div>
-                </div>
-                <div class="precio">$180</div>
-            </label>
-            <label class="servicio-item" onclick="toggleServicio(this, 300, 'Facial Completo + Masaje')">
-                <div style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="checkbox" value="Facial Completo + Masaje">
-                    <div>
-                        <strong>Facial Completo + Masaje</strong>
-                        <p style="margin: 0; color: #aaa; font-size: 0.85rem;">Limpieza profunda y masaje relajante - 45 min</p>
-                    </div>
-                </div>
-                <div class="precio">$300</div>
-            </label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input" type="checkbox" value="Limpieza Express" onchange="toggleServicioCheckbox(this, 180, 'Limpieza Express')"><div><strong>Limpieza Facial Express</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Exfoliación y mascarilla negra</p></div></div><div class="precio">$180</div></label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input" type="checkbox" value="Facial Completo" onchange="toggleServicioCheckbox(this, 300, 'Facial Completo + Masaje')"><div><strong>Facial Completo + Masaje</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Limpieza profunda y masaje relajante</p></div></div><div class="precio">$300</div></label>
         </div>
 
-        <!-- Categoría: Combos Especiales -->
-        <button class="categoria-btn" onclick="toggleCategoria('cat-combos')">
-            🔥 Combos Especiales <span>▼</span>
-        </button>
+        <!-- Combos -->
+        <button class="categoria-btn" onclick="toggleCategoria('cat-combos')">🔥 Combos Especiales <span>▼</span></button>
         <div id="cat-combos" class="categoria-contenido">
-            <label class="servicio-item" onclick="toggleServicio(this, 350, 'Combo Ejecutivo')">
-                <div style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="checkbox" value="Combo Ejecutivo">
-                    <div>
-                        <strong>Combo Ejecutivo</strong>
-                        <p style="margin: 0; color: #aaa; font-size: 0.85rem;">Corte Fade + Perfilado de Barba - 60 min</p>
-                    </div>
-                </div>
-                <div class="precio">$350</div>
-            </label>
-            <label class="servicio-item" onclick="toggleServicio(this, 650, 'Ritual Lumina VIP')">
-                <div style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="checkbox" value="Ritual Lumina VIP">
-                    <div>
-                        <strong>Ritual Lumina VIP</strong>
-                        <p style="margin: 0; color: #aaa; font-size: 0.85rem;">Corte + Barba Premium + Facial Completo - 90 min</p>
-                    </div>
-                </div>
-                <div class="precio">$650</div>
-            </label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input" type="checkbox" value="Combo Ejecutivo" onchange="toggleServicioCheckbox(this, 350, 'Combo Ejecutivo')"><div><strong>Combo Ejecutivo</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Corte Fade + Perfilado de Barba</p></div></div><div class="precio">$350</div></label>
+            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input" type="checkbox" value="Ritual VIP" onchange="toggleServicioCheckbox(this, 650, 'Ritual Lumina VIP')"><div><strong>Ritual Lumina VIP</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Corte + Barba Premium + Facial Completo</p></div></div><div class="precio">$650</div></label>
         </div>
 
         <h3 class="titulo-seccion" style="margin-top: 40px;">2. Fecha y hora de tu cita</h3>
-        
         <div style="display: flex; gap: 20px; flex-wrap: wrap;">
             <div class="input-grupo" style="flex: 1; min-width: 200px;">
                 <label class="input-label">Elige la fecha:</label>
                 <input type="date" id="selector-fecha" class="input-oscuro" onchange="validarDisponibilidad()">
             </div>
-            
             <div class="input-grupo" style="flex: 1; min-width: 200px;">
-                <label class="input-label">Escribe o elige la hora:</label>
+                <label class="input-label">Elige la hora:</label>
                 <input type="time" id="selector-hora" class="input-oscuro" value="16:00" onchange="validarDisponibilidad()">
             </div>
         </div>
-
-        <div>
-            <label class="input-label">Horarios sugeridos disponibles:</label>
-            <button class="btn-fechas" onclick="setearHora('10:00')">10:00</button>
-            <button class="btn-fechas" onclick="setearHora('12:30')">12:30</button>
-            <button class="btn-fechas active" id="btn-1600" onclick="setearHora('16:00')">16:00</button>
-            <button class="btn-fechas" onclick="setearHora('18:00')">18:00</button>
-        </div>
-        <p id="alerta-ocupado" style="color: #ff4d4d; font-size: 0.95rem; display: none; margin-top: 15px; padding: 10px; background: rgba(255,0,0,0.1); border-left: 3px solid #ff4d4d;">⚠️ <strong>Horario no disponible.</strong> Ya existe una reservación en esa fecha y hora. Por favor, elige otra.</p>
+        <p id="alerta-ocupado" style="color: #ff4d4d; font-size: 0.95rem; display: none; margin-top: 15px; padding: 10px; background: rgba(255,0,0,0.1); border-left: 3px solid #ff4d4d;">⚠️ <strong>Horario no disponible.</strong> El barbero seleccionado ya tiene una cita a esa hora. Elige otra.</p>
     </div>
 
-    <!-- Columna 3: Resumen de Reserva -->
+    <!-- COLUMNA 3: Resumen -->
     <div class="col-reserva card">
         <h3 class="titulo-seccion">Tu reserva</h3>
+        
+        <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">SUCURSAL</p>
+        <p id="resumen-sucursal" style="font-weight: bold; margin: 0 0 15px 0; font-size: 1.1rem; color: #fff;">Centro</p>
+
+        <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">BARBERO SELECCIONADO</p>
+        <p id="resumen-barbero" style="font-weight: bold; margin: 0 0 15px 0; font-size: 1.1rem; color: #d4af37;">Cualquier barbero disponible</p>
+
         <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">SERVICIOS</p>
         <p id="resumen-servicios" style="font-weight: bold; margin: 0 0 15px 0; font-size: 0.95rem; color: #fff;">Ningún servicio seleccionado</p>
         
@@ -203,19 +140,11 @@
         <p id="resumen-fecha-hora" style="font-weight: bold; margin: 0 0 20px 0; color: #fff;">Selecciona una fecha y hora</p>
         
         <hr style="border-color: #333; margin-bottom: 20px;">
-        
         <div style="display: flex; justify-content: space-between; font-size: 1.3rem; margin-bottom: 15px;">
             <span style="color: white;">Total</span>
             <span class="precio" id="resumen-total">$0</span>
         </div>
-        
         <button class="btn-confirmar" id="btn-submit">Confirmar reserva</button>
-        
-        <div style="font-size: 0.85rem; color: #888; text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #333;">
-            <p style="margin-bottom: 8px;">Métodos de pago aceptados en el local:</p>
-            <div style="font-size: 1.2rem;">💳 💵 📱</div>
-            <p style="margin-top: 5px; font-size: 0.8rem;">Visa, Mastercard, Efectivo y Transferencia</p>
-        </div>
     </div>
 </div>
 
@@ -223,33 +152,62 @@
     let total = 0;
     let serviciosSeleccionados = [];
 
-    // Inicializar fecha al cargar
-    document.addEventListener("DOMContentLoaded", function() {
-        const inputFecha = document.getElementById('selector-fecha');
-        const hoy = new Date().toISOString().split('T')[0];
-        inputFecha.value = hoy;
-        inputFecha.min = hoy; 
-        validarDisponibilidad();
-    });
+    // --- BASE DE DATOS LOCAL DE BARBEROS ---
+    const barberosPorSucursal = {
+        "Centro": [
+            { nombre: "Cualquier barbero disponible", valor: "Cualquier barbero disponible" },
+            { nombre: "Irvin Chavarría (Cortes urbanos / Fade)", valor: "Irvin Chavarría" },
+            { nombre: "Fernando Rodríguez (Cortes clásicos / Barba)", valor: "Fernando Rodríguez" },
+            { nombre: "Geovany Iván (Masajes / Rituales VIP)", valor: "Geovany Iván" }
+        ],
+        "Plaza": [
+            { nombre: "Cualquier barbero disponible", valor: "Cualquier barbero disponible" },
+            { nombre: "Diego Silva (Colorimetría / Faciales)", valor: "Diego Silva" },
+            { nombre: "Erick Ulises (Diseño / Freestyle)", valor: "Erick Ulises" }
+        ]
+    };
 
-    // Función para mostrar/ocultar categorías (Acordeón)
-    function toggleCategoria(idCategoria) {
-        const contenido = document.getElementById(idCategoria);
-        if (contenido.classList.contains('show')) {
-            contenido.classList.remove('show');
-        } else {
-            // Opcional: Ocultar las demás al abrir una (descomentar si se desea)
-            // document.querySelectorAll('.categoria-contenido').forEach(el => el.classList.remove('show'));
-            contenido.classList.add('show');
+    // Filtra el select dependiendo del radio button
+    function filtrarBarberos(barberoSeleccionadoPorUrl = null) {
+        const sucursalElegida = document.querySelector('input[name="sucursal"]:checked').value;
+        const selectorBarbero = document.getElementById('selector-barbero');
+        
+        // Limpiamos el select
+        selectorBarbero.innerHTML = '';
+        
+        // Llenamos el select con los barberos de esa sucursal
+        barberosPorSucursal[sucursalElegida].forEach(barbero => {
+            let option = document.createElement('option');
+            option.value = barbero.valor;
+            option.text = barbero.nombre;
+            selectorBarbero.appendChild(option);
+        });
+
+        // Actualiza el resumen de sucursal
+        document.getElementById('resumen-sucursal').innerText = sucursalElegida;
+
+        // Si venimos de la URL con un barbero específico, intentamos seleccionarlo
+        if (barberoSeleccionadoPorUrl && barberoSeleccionadoPorUrl !== 'Cualquier barbero') {
+            for(let i=0; i<selectorBarbero.options.length; i++) {
+                if(selectorBarbero.options[i].value === barberoSeleccionadoPorUrl) {
+                    selectorBarbero.selectedIndex = i;
+                    break;
+                }
+            }
         }
+
+        actualizarResumen();
     }
 
-    // Función para seleccionar servicios
-    function toggleServicio(elemento, precio, nombreServicio) {
-        const checkbox = elemento.querySelector('.form-check-input');
-        
-        if(event.target.type !== 'checkbox') { checkbox.checked = !checkbox.checked; }
+    // Funciones de servicios y UX
+    function toggleCategoria(idCategoria) {
+        const contenido = document.getElementById(idCategoria);
+        if (contenido.classList.contains('show')) { contenido.classList.remove('show'); } 
+        else { contenido.classList.add('show'); }
+    }
 
+    function toggleServicioCheckbox(checkbox, precio, nombreServicio) {
+        let elemento = checkbox.closest('.servicio-item');
         if (checkbox.checked) {
             elemento.classList.add('selected');
             total += precio;
@@ -263,9 +221,9 @@
         document.getElementById('resumen-servicios').innerHTML = serviciosSeleccionados.length > 0 ? serviciosSeleccionados.join('<br>') : 'Ningún servicio seleccionado';
     }
 
-    // Funciones para Fecha y Hora
-    function setearHora(hora) {
-        document.getElementById('selector-hora').value = hora;
+    function actualizarResumen() {
+        const selector = document.getElementById('selector-barbero');
+        document.getElementById('resumen-barbero').innerText = selector.value;
         validarDisponibilidad();
     }
 
@@ -275,15 +233,12 @@
         const alerta = document.getElementById('alerta-ocupado');
         const btnSubmit = document.getElementById('btn-submit');
         
-        // --- SIMULACIÓN DE VALIDACIÓN ---
-        // Aquí simulamos que el 14 de Octubre a las 11:30 y Hoy a las 14:00 están ocupados.
-        // En el futuro, esto se conectará a la base de datos SQL Server.
-        if (horaVal === "11:30" || horaVal === "14:00") {
+        if (horaVal === "14:00") {
             alerta.style.display = 'block';
             btnSubmit.style.background = '#333';
             btnSubmit.style.color = '#666';
             btnSubmit.style.cursor = 'not-allowed';
-            btnSubmit.innerText = 'Horario no disponible';
+            btnSubmit.innerText = 'Barbero no disponible';
             btnSubmit.disabled = true;
         } else {
             alerta.style.display = 'none';
@@ -294,17 +249,45 @@
             btnSubmit.disabled = false;
         }
 
-        // Actualizar texto del resumen
         if(fechaVal && horaVal) {
             const opciones = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
             const fechaObj = new Date(fechaVal + 'T00:00:00');
             const fechaFormateada = fechaObj.toLocaleDateString('es-MX', opciones);
             document.getElementById('resumen-fecha-hora').innerText = fechaFormateada + ', ' + horaVal + ' hrs';
         }
-        
-        // Actualizar botones rápidos
-        document.querySelectorAll('.btn-fechas').forEach(b => b.classList.remove('active'));
-        const btnCorrespondiente = Array.from(document.querySelectorAll('.btn-fechas')).find(b => b.innerText === horaVal);
-        if(btnCorrespondiente) btnCorrespondiente.classList.add('active');
     }
+
+    // Al cargar la página
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputFecha = document.getElementById('selector-fecha');
+        const hoy = new Date().toISOString().split('T')[0];
+        inputFecha.value = hoy; inputFecha.min = hoy; 
+
+        // 1. Verificar si viene un barbero de la URL y seleccionar su sucursal automáticamente
+        let barberoUrl = '@Html.Raw(ViewBag.Barbero)';
+        
+        if (barberoUrl && barberoUrl !== 'Cualquier barbero') {
+            // Buscamos en qué sucursal está el barbero que viene en la URL
+            if (barberosPorSucursal["Centro"].some(b => b.valor === barberoUrl)) {
+                document.querySelector('input[value="Centro"]').checked = true;
+            } else if (barberosPorSucursal["Plaza"].some(b => b.valor === barberoUrl)) {
+                document.querySelector('input[value="Plaza"]').checked = true;
+            }
+        }
+        
+        // Inicializamos los barberos según la sucursal que quedó seleccionada
+        filtrarBarberos(barberoUrl); 
+
+        // 2. Auto-seleccionar el corte si viene por URL
+        let corteUrl = '@Html.Raw(ViewBag.Corte)';
+        if(corteUrl) {
+            let checkboxes = document.querySelectorAll('.check-corte');
+            checkboxes.forEach(cb => {
+                if(cb.value === corteUrl) {
+                    cb.checked = true;
+                    toggleServicioCheckbox(cb, parseInt(cb.closest('.servicio-item').querySelector('.precio').innerText.replace('$','')), corteUrl);
+                }
+            });
+        }
+    });
 </script>

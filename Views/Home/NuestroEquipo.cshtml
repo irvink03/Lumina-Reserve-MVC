@@ -1,0 +1,94 @@
+@{
+    ViewData["Title"] = "Nuestro Equipo";
+}
+<style>
+    .team-container { max-width: 1200px; margin: auto; padding: 40px 20px; text-align: center; }
+    .team-title { color: #d4af37; font-size: 3rem; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+    .team-subtitle { color: #ccc; font-size: 1.2rem; margin-bottom: 50px; }
+    .team-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
+    .barber-card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; width: 340px; overflow: hidden; transition: 0.3s; text-align: left; }
+    .barber-card:hover { transform: translateY(-10px); border-color: #d4af37; box-shadow: 0 10px 20px rgba(0,0,0,0.6); }
+    .barber-img { width: 100%; height: 350px; object-fit: cover; border-bottom: 2px solid #d4af37; filter: grayscale(10%); transition: 0.3s; }
+    .barber-card:hover .barber-img { filter: grayscale(0%); }
+    .barber-info { padding: 20px; }
+    .barber-name { color: white; font-size: 1.5rem; font-weight: bold; margin-bottom: 5px; }
+    .barber-role { color: #d4af37; font-size: 0.9rem; margin-bottom: 15px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;}
+    .barber-desc { color: #aaa; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; min-height: 60px; }
+    .btn-group { display: flex; gap: 10px; }
+    .btn-agendar { flex: 1; background: #d4af37; color: black; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; text-decoration: none; text-align: center; font-size: 1rem;}
+    .btn-agendar:hover { background: #b5952f; color: black;}
+    .btn-portafolio { flex: 1; background: transparent; color: white; border: 1px solid #555; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; text-decoration: none; text-align: center; font-size: 1rem;}
+    .btn-portafolio:hover { border-color: white; background: #222; color: white;}
+</style>
+
+<div class="team-container">
+    <h1 class="team-title">Nuestro Equipo</h1>
+    <p class="team-subtitle">Los 5 profesionales detrás de Lumina Reserve.</p>
+
+    <div class="team-grid">
+        <div class="barber-card">
+            <img src="~/img/irvin.jpg" alt="Irvin" class="barber-img">
+            <div class="barber-info">
+                <h3 class="barber-name">Irvin Chavarría</h3>
+                <p class="barber-role">Maestro Barbero / Fundador</p>
+                <p class="barber-desc">Especialista en cortes urbanos y fade perfecto. Estilo impecable y atención al detalle.</p>
+                <div class="btn-group">
+                    <a asp-controller="Home" asp-action="AgendarCita" asp-route-barbero="Irvin Chavarría" class="btn-agendar">Agendar</a>
+                    <a asp-controller="Home" asp-action="Portafolio" asp-route-barbero="Irvin Chavarría" class="btn-portafolio">Ver trabajos</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="barber-card">
+            <img src="~/img/fernando.jpg" alt="Fernando" class="barber-img">
+            <div class="barber-info">
+                <h3 class="barber-name">Fernando Rodríguez</h3>
+                <p class="barber-role">Especialista Clásico</p>
+                <p class="barber-desc">Cortes tradicionales a tijera y arreglos de barba con toalla caliente.</p>
+                <div class="btn-group">
+                    <a asp-controller="Home" asp-action="AgendarCita" asp-route-barbero="Fernando Rodríguez" class="btn-agendar">Agendar</a>
+                    <a asp-controller="Home" asp-action="Portafolio" asp-route-barbero="Fernando Rodríguez" class="btn-portafolio">Ver trabajos</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="barber-card">
+            <img src="~/img/diego.jpg" alt="Diego" class="barber-img">
+            <div class="barber-info">
+                <h3 class="barber-name">Diego Silva</h3>
+                <p class="barber-role">Estilista y Colorista</p>
+                <p class="barber-desc">Experto en colorimetría, texturizados y tratamientos faciales profundos.</p>
+                <div class="btn-group">
+                    <a asp-controller="Home" asp-action="AgendarCita" asp-route-barbero="Diego Silva" class="btn-agendar">Agendar</a>
+                    <a asp-controller="Home" asp-action="Portafolio" asp-route-barbero="Diego Silva" class="btn-portafolio">Ver trabajos</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="barber-card">
+            <img src="~/img/erick.jpg" alt="Erick" class="barber-img">
+            <div class="barber-info">
+                <h3 class="barber-name">Erick Ulises</h3>
+                <p class="barber-role">Diseño y Freestyle</p>
+                <p class="barber-desc">Crea arte en tu cabello. Especialista en diseños únicos, grecas y sombreados.</p>
+                <div class="btn-group">
+                    <a asp-controller="Home" asp-action="AgendarCita" asp-route-barbero="Erick Ulises" class="btn-agendar">Agendar</a>
+                    <a asp-controller="Home" asp-action="Portafolio" asp-route-barbero="Erick Ulises" class="btn-portafolio">Ver trabajos</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="barber-card">
+            <img src="~/img/ivan.jpg" alt="Geovany" class="barber-img">
+            <div class="barber-info">
+                <h3 class="barber-name">Geovany Iván</h3>
+                <p class="barber-role">Cuidado Integral</p>
+                <p class="barber-desc">Masajes relajantes, exfoliaciones y rituales VIP para caballeros.</p>
+                <div class="btn-group">
+                    <a asp-controller="Home" asp-action="AgendarCita" asp-route-barbero="Geovany Iván" class="btn-agendar">Agendar</a>
+                    <a asp-controller="Home" asp-action="Portafolio" asp-route-barbero="Geovany Iván" class="btn-portafolio">Ver trabajos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "Ubicación y Contacto";
+}
+
+<style>
+    .ubicacion-container { max-width: 1200px; margin: auto; padding: 40px 20px; text-align: center; }
+    .ubicacion-title { color: #d4af37; font-size: 3rem; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+    
+    /* Tarjetas de contacto elegantes */
+    .sucursales-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-bottom: 60px; margin-top: 40px;}
+    .sucursal-card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; width: 400px; padding: 30px; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border-top: 4px solid #d4af37; transition: 0.3s;}
+    .sucursal-card:hover { transform: translateY(-5px); border-color: #d4af37;}
+    .sucursal-card h3 { color: white; font-size: 1.5rem; margin-bottom: 15px; }
+    .sucursal-card p { color: #aaa; font-size: 1rem; line-height: 1.6; margin-bottom: 10px;}
+    .sucursal-card strong { color: #d4af37; }
+</style>
+
+<div class="ubicacion-container">
+    <h1 class="ubicacion-title">Ubicación y Contacto</h1>
+    <p style="color: #ccc; font-size: 1.2rem;">Visítanos en cualquiera de nuestras sucursales en Tuxtla Gutiérrez.</p>
+
+    <div class="sucursales-grid">
+        <!-- Sucursal 1 -->
+        <div class="sucursal-card">
+            <h3>Lumina Reserve - Centro</h3>
+            <p><strong>📍 Dirección:</strong> Calle Central #123, Colonia Centro, Tuxtla Gutiérrez, Chiapas.</p>
+            <p><strong>📞 Teléfono:</strong> 961-111-2222</p>
+            <p><strong>✉️ Correo:</strong> centro@luminareserve.com</p>
+        </div>
+        
+        <!-- Sucursal 2 -->
+        <div class="sucursal-card">
+            <h3>Lumina Reserve - Plaza</h3>
+            <p><strong>📍 Dirección:</strong> Blvd. Belisario Domínguez #456, Plaza Cristal, Tuxtla Gutiérrez.</p>
+            <p><strong>📞 Teléfono:</strong> 961-333-4444</p>
+            <p><strong>✉️ Correo:</strong> plaza@luminareserve.com</p>
+        </div>
+    </div>
+</div>

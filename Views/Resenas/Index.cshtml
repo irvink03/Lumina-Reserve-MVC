@@ -1,0 +1,234 @@
+@{
+    ViewData["Title"] = "Reseñas";
+}
+
+<!-- CDN de Tailwind y FontAwesome para asegurar que los estilos carguen en esta vista -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    /* Estilos personalizados adicionales */
+    .bg-barber-dark { background-color: #121212; }
+    .bg-barber-card { background-color: #1e1e1e; }
+    .text-gold { color: #d4af37; }
+    .border-gold { border-color: #d4af37; }
+    .btn-gold { background-color: #d4af37; color: #121212; }
+    .btn-gold:hover { background-color: #b5952f; }
+    
+    .star-rating i {
+        color: #555;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    .star-rating i.active, .star-rating i:hover, .star-rating i.hover-active {
+        color: #d4af37;
+    }
+</style>
+
+<div class="bg-barber-dark min-h-screen text-gray-200 py-12 px-4 sm:px-6 lg:px-8 font-sans">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- Encabezado -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-white mb-4 uppercase tracking-wider">La Voz de Nuestros <span class="text-gold">Clientes</span></h1>
+            <p class="text-gray-400 max-w-2xl mx-auto">Tu opinión forja nuestra excelencia. Califica el servicio de nuestros especialistas.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Columna Izquierda: Formulario -->
+            <div class="lg:col-span-1">
+                <div class="bg-barber-card rounded-lg p-6 border-t-4 border-gold shadow-2xl sticky top-6">
+                    <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-700 pb-2">Dejar una Reseña</h2>
+                    
+                    <form id="reviewForm">
+                        <!-- Nombre -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Tu Nombre</label>
+                            <input type="text" id="clientName" required class="w-full bg-gray-800 border border-gray-700 rounded p-3 text-white focus:outline-none focus:border-gold transition-colors" placeholder="Ej. Carlos Martínez">
+                        </div>
+
+                        <!-- Selector de Barbero -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Selecciona a tu Barbero</label>
+                            <div class="relative">
+                                <select id="barberSelect" required class="w-full bg-gray-800 border border-gray-700 rounded p-3 text-white appearance-none focus:outline-none focus:border-gold">
+                                    <option value="" disabled selected>Elige un especialista...</option>
+                                    <option value="Irvin Chavarría">Irvin Chavarría (Maestro Barbero / Fundador)</option>
+                                    <option value="Fernando Rodríguez">Fernando Rodríguez (Especialista Clásico)</option>
+                                    <option value="Diego Silva">Diego Silva (Estilista y Colorista)</option>
+                                    <option value="Erick Ulises">Erick Ulises (Diseño y Freestyle)</option>
+                                    <option value="Geovany Iván">Geovany Iván (Cuidado Integral)</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sistema de Estrellas -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Calificación</label>
+                            <div class="star-rating text-2xl" id="starSystem">
+                                <i class="fa-solid fa-star" data-rating="1"></i>
+                                <i class="fa-solid fa-star" data-rating="2"></i>
+                                <i class="fa-solid fa-star" data-rating="3"></i>
+                                <i class="fa-solid fa-star" data-rating="4"></i>
+                                <i class="fa-solid fa-star" data-rating="5"></i>
+                            </div>
+                            <input type="hidden" id="ratingValue" required>
+                            <p id="ratingError" class="text-red-500 text-xs mt-1 hidden">Por favor, selecciona una calificación.</p>
+                        </div>
+
+                        <!-- Comentario -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Tu Experiencia</label>
+                            <textarea id="reviewText" required rows="4" class="w-full bg-gray-800 border border-gray-700 rounded p-3 text-white focus:outline-none focus:border-gold resize-none" placeholder="¿Qué tal quedó el corte?"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full btn-gold font-bold py-3 px-4 rounded transition-colors uppercase tracking-wide">
+                            Publicar Reseña
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Lista de Reseñas -->
+            <div class="lg:col-span-2">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">Reseñas Recientes</h2>
+                    <span class="bg-gray-800 text-gold text-xs font-bold px-3 py-1 rounded-full border border-gray-700"><span id="reviewCount">3</span> Opiniones</span>
+                </div>
+                
+                <div id="reviewsContainer" class="space-y-4">
+                    <!-- Reseñas generadas por JavaScript se insertarán aquí -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const starSystem = document.getElementById('starSystem');
+            const stars = starSystem.querySelectorAll('i');
+            const ratingValueInput = document.getElementById('ratingValue');
+            const reviewForm = document.getElementById('reviewForm');
+            const reviewsContainer = document.getElementById('reviewsContainer');
+            const reviewCountSpan = document.getElementById('reviewCount');
+            const ratingError = document.getElementById('ratingError');
+
+            // Datos de prueba iniciales basados en tu equipo
+            let reviewsData = [
+                { id: 1, client: "Alejandro G.", barber: "Irvin Chavarría", rating: 5, text: "Excelente atención y detalle en el fade. Irvin entiende perfecto lo que necesitas.", date: "Hace 2 días" },
+                { id: 2, client: "Roberto M.", barber: "Fernando Rodríguez", rating: 5, text: "El servicio clásico con toalla caliente es otro nivel. Fernando es un profesional.", date: "Hace 1 semana" },
+                { id: 3, client: "Daniel S.", barber: "Erick Ulises", rating: 4, text: "Muy buen freestyle, me hizo un diseño bastante limpio. Recomendado.", date: "Hace 2 semanas" }
+            ];
+
+            // 1. Lógica Interactiva de las Estrellas
+            stars.forEach(star => {
+                star.addEventListener('mouseover', function() {
+                    const value = this.getAttribute('data-rating');
+                    stars.forEach(s => {
+                        s.classList.remove('hover-active');
+                        if (s.getAttribute('data-rating') <= value) {
+                            s.classList.add('hover-active');
+                        }
+                    });
+                });
+
+                star.addEventListener('mouseout', function() {
+                    stars.forEach(s => s.classList.remove('hover-active'));
+                });
+
+                star.addEventListener('click', function() {
+                    const value = this.getAttribute('data-rating');
+                    ratingValueInput.value = value;
+                    ratingError.classList.add('hidden');
+                    
+                    stars.forEach(s => {
+                        if (s.getAttribute('data-rating') <= value) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // 2. Renderizar Reseñas en el DOM
+            function renderReviews() {
+                reviewsContainer.innerHTML = '';
+                reviewCountSpan.textContent = reviewsData.length;
+
+                if(reviewsData.length === 0) {
+                    reviewsContainer.innerHTML = '<p class="text-gray-500 text-center py-8">Aún no hay reseñas. ¡Sé el primero en calificar!</p>';
+                    return;
+                }
+
+                reviewsData.forEach(review => {
+                    let starsHtml = '';
+                    for(let i = 1; i <= 5; i++) {
+                        starsHtml += i <= review.rating 
+                            ? '<i class="fa-solid fa-star text-gold text-sm"></i>' 
+                            : '<i class="fa-solid fa-star text-gray-600 text-sm"></i>';
+                    }
+
+                    const reviewCard = `
+                        <div class="bg-barber-card border border-gray-800 rounded-lg p-5 hover:border-gray-600 transition-colors">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h3 class="font-bold text-white text-lg">${review.client}</h3>
+                                    <p class="text-xs text-gray-400 mb-1">Atendido por: <span class="text-gold font-medium">${review.barber}</span></p>
+                                </div>
+                                <div class="flex space-x-1">
+                                    ${starsHtml}
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm mt-3 leading-relaxed">"${review.text}"</p>
+                            <div class="mt-4 text-right">
+                                <span class="text-xs text-gray-500">${review.date}</span>
+                            </div>
+                        </div>
+                    `;
+                    reviewsContainer.insertAdjacentHTML('beforeend', reviewCard);
+                });
+            }
+
+            // 3. Manejo del Formulario
+            reviewForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if(!ratingValueInput.value) {
+                    ratingError.classList.remove('hidden');
+                    return;
+                }
+
+                const newReview = {
+                    id: Date.now(),
+                    client: document.getElementById('clientName').value,
+                    barber: document.getElementById('barberSelect').value,
+                    rating: parseInt(ratingValueInput.value),
+                    text: document.getElementById('reviewText').value,
+                    date: "Justo ahora"
+                };
+
+                // Añadir al principio del array
+                reviewsData.unshift(newReview);
+                renderReviews();
+                
+                // Limpiar formulario
+                reviewForm.reset();
+                ratingValueInput.value = '';
+                stars.forEach(s => s.classList.remove('active', 'hover-active'));
+
+                // NOTA MVC: Aquí en el futuro usarás fetch() para enviar 'newReview' a tu acción 'GuardarReseña'
+            });
+
+            // Renderizar datos iniciales al cargar
+            renderReviews();
+        });
+    </script>
+}
