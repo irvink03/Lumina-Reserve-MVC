@@ -4,7 +4,8 @@ namespace Lumina_Reserve_MVC.Controllers
 {
     public class ResenasController : Controller
     {
-        public IActionResult Index()
+        // CAMBIO AQUÍ: Cambiamos Index() por Resenas() para que conecte con Resenas.cshtml
+        public IActionResult Resenas()
         {
             return View(); 
         }

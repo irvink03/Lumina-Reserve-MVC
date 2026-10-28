@@ -1,0 +1,184 @@
+@{
+    ViewData["Title"] = "Portafolio de Cortes";
+}
+
+<div class="portfolio-container">
+    <h1 class="portfolio-title">Estilos en Tendencia por @ViewBag.Barbero</h1>
+    <p style="color: #ccc;">Explora nuestros trabajos. Haz clic en la imagen para ver los detalles sin compromiso.</p>
+
+    <!-- Usamos un grid que asegura que todas las tarjetas midan lo mismo -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
+
+        <!-- 1. SKIN FADE -->
+        <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden flex flex-col hover:border-[#d4af37] transition-all shadow-lg hover:shadow-2xl">
+            <!-- RUTA EXACTA DE TU IMAGEN -->
+            <img src="~/img/Skin-Fade.jpg" alt="Skin Fade" class="w-full h-64 object-cover border-b-2 border-[#d4af37] cursor-pointer hover:brightness-110 transition-all" onclick="abrirFoto('@Url.Content("~/img/Skin-Fade.jpg")', 'Skin Fade')">
+            <div class="p-6 flex flex-col flex-grow text-left">
+                <h3 class="text-2xl font-bold text-[#d4af37] mb-3">Skin Fade</h3>
+                <!-- El text-gray-400 y flex-grow empujan los botones hacia abajo -->
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">Desvanecido impecable que llega hasta la piel (rasurado). Ideal para un look muy limpio, fresco y de alto contraste en los laterales.</p>
+                
+                <!-- Botones alineados al fondo -->
+                <div class="flex gap-3 mt-auto">
+                    <button class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-gray-800" onclick="abrirFoto('@Url.Content("~/img/Skin-Fade.jpg")', 'Skin Fade')">
+                        🔍 Ver
+                    </button>
+                    <!-- El asp-route-corte manda "Skin Fade" -->
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="@ViewBag.Barbero" asp-route-corte="Skin Fade" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-[#b5952f]" style="text-decoration: none;">
+                        📅 Agendar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. LOW FADE -->
+        <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden flex flex-col hover:border-[#d4af37] transition-all shadow-lg hover:shadow-2xl">
+            <img src="~/img/Low-Fade.jpg" alt="Low Fade" class="w-full h-64 object-cover border-b-2 border-[#d4af37] cursor-pointer hover:brightness-110 transition-all" onclick="abrirFoto('@Url.Content("~/img/Low-Fade.jpg")', 'Low Fade')">
+            <div class="p-6 flex flex-col flex-grow text-left">
+                <h3 class="text-2xl font-bold text-[#d4af37] mb-3">Low Fade</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">Degradado bajo que comienza justo por encima de las orejas y en la base de la nuca. Excelente opción para quienes prefieren mantener más oscuridad en los laterales.</p>
+                
+                <div class="flex gap-3 mt-auto">
+                    <button class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-gray-800" onclick="abrirFoto('@Url.Content("~/img/Low-Fade.jpg")', 'Low Fade')">
+                        🔍 Ver
+                    </button>
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="@ViewBag.Barbero" asp-route-corte="Low Fade" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-[#b5952f]" style="text-decoration: none;">
+                        📅 Agendar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. BURST FADE -->
+        <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden flex flex-col hover:border-[#d4af37] transition-all shadow-lg hover:shadow-2xl">
+            <img src="~/img/Burst-Fade.jpg" alt="Burst Fade" class="w-full h-64 object-cover border-b-2 border-[#d4af37] cursor-pointer hover:brightness-110 transition-all" onclick="abrirFoto('@Url.Content("~/img/Burst-Fade.jpg")', 'Burst Fade')">
+            <div class="p-6 flex flex-col flex-grow text-left">
+                <h3 class="text-2xl font-bold text-[#d4af37] mb-3">Burst Fade</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">Desvanecido en forma de semicírculo que sigue la curva de la oreja, dejando longitud en la nuca. Muy popular combinado con mullets o mohicanos.</p>
+                
+                <div class="flex gap-3 mt-auto">
+                    <button class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-gray-800" onclick="abrirFoto('@Url.Content("~/img/Burst-Fade.jpg")', 'Burst Fade')">
+                        🔍 Ver
+                    </button>
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="@ViewBag.Barbero" asp-route-corte="Burst Fade" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-[#b5952f]" style="text-decoration: none;">
+                        📅 Agendar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. TEXTURED CROP -->
+        <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden flex flex-col hover:border-[#d4af37] transition-all shadow-lg hover:shadow-2xl">
+            <img src="~/img/El-Textured-Crop.jpg" alt="Textured Crop" class="w-full h-64 object-cover border-b-2 border-[#d4af37] cursor-pointer hover:brightness-110 transition-all" onclick="abrirFoto('@Url.Content("~/img/El-Textured-Crop.jpg")', 'Textured Crop')">
+            <div class="p-6 flex flex-col flex-grow text-left">
+                <h3 class="text-2xl font-bold text-[#d4af37] mb-3">Textured Crop</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">Laterales muy cortos con textura desordenada arriba y flequillo hacia adelante. Perfecto para disimular frentes amplias. Base del popular "Edgar Cut".</p>
+                
+                <div class="flex gap-3 mt-auto">
+                    <button class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-gray-800" onclick="abrirFoto('@Url.Content("~/img/El-Textured-Crop.jpg")', 'Textured Crop')">
+                        🔍 Ver
+                    </button>
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="@ViewBag.Barbero" asp-route-corte="Textured Crop" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-[#b5952f]" style="text-decoration: none;">
+                        📅 Agendar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. MODERN MULLET -->
+        <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden flex flex-col hover:border-[#d4af37] transition-all shadow-lg hover:shadow-2xl">
+            <img src="~/img/El-Modern-Mullet.jpg" alt="Modern Mullet" class="w-full h-64 object-cover border-b-2 border-[#d4af37] cursor-pointer hover:brightness-110 transition-all" onclick="abrirFoto('@Url.Content("~/img/El-Modern-Mullet.jpg")', 'Modern Mullet')">
+            <div class="p-6 flex flex-col flex-grow text-left">
+                <h3 class="text-2xl font-bold text-[#d4af37] mb-3">Modern Mullet</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">El clásico de los 80. Mantiene volumen en la parte superior y longitud en la nuca, modernizado con un burst fade en los laterales. Atrevido y con mucho carácter.</p>
+                
+                <div class="flex gap-3 mt-auto">
+                    <button class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-gray-800" onclick="abrirFoto('@Url.Content("~/img/El-Modern-Mullet.jpg")', 'Modern Mullet')">
+                        🔍 Ver
+                    </button>
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="@ViewBag.Barbero" asp-route-corte="Modern Mullet" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-[#b5952f]" style="text-decoration: none;">
+                        📅 Agendar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. CORTE BRÓCOLI -->
+        <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden flex flex-col hover:border-[#d4af37] transition-all shadow-lg hover:shadow-2xl">
+            <img src="~/img/Corte-Permanente-Zoomer.jpg" alt="Corte Brócoli" class="w-full h-64 object-cover border-b-2 border-[#d4af37] cursor-pointer hover:brightness-110 transition-all" onclick="abrirFoto('@Url.Content("~/img/Corte-Permanente-Zoomer.jpg")', 'Corte Brócoli')">
+            <div class="p-6 flex flex-col flex-grow text-left">
+                <h3 class="text-2xl font-bold text-[#d4af37] mb-3">Corte Brócoli (Zoomer)</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">Favorito de la Generación Z. Laterales cortos con degradado y parte superior llena de rizos desordenados con mucho volumen hacia la frente.</p>
+                
+                <div class="flex gap-3 mt-auto">
+                    <button class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-gray-800" onclick="abrirFoto('@Url.Content("~/img/Corte-Permanente-Zoomer.jpg")', 'Corte Brócoli')">
+                        🔍 Ver
+                    </button>
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="@ViewBag.Barbero" asp-route-corte="Corte Brócoli" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-[#b5952f]" style="text-decoration: none;">
+                        📅 Agendar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. BUZZ CUT -->
+        <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden flex flex-col hover:border-[#d4af37] transition-all shadow-lg hover:shadow-2xl">
+            <img src="~/img/El-Buzz-Cut.jpg" alt="Buzz Cut" class="w-full h-64 object-cover border-b-2 border-[#d4af37] cursor-pointer hover:brightness-110 transition-all" onclick="abrirFoto('@Url.Content("~/img/El-Buzz-Cut.jpg")', 'Buzz Cut')">
+            <div class="p-6 flex flex-col flex-grow text-left">
+                <h3 class="text-2xl font-bold text-[#d4af37] mb-3">Buzz Cut (Rapado)</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">Estilo militar ultra corto y de longitud uniforme arriba, combinado con un degradado en los laterales. Ideal para bajo mantenimiento o deportistas.</p>
+                
+                <div class="flex gap-3 mt-auto">
+                    <button class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-gray-800" onclick="abrirFoto('@Url.Content("~/img/El-Buzz-Cut.jpg")', 'Buzz Cut')">
+                        🔍 Ver
+                    </button>
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="@ViewBag.Barbero" asp-route-corte="Buzz Cut" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-[#b5952f]" style="text-decoration: none;">
+                        📅 Agendar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+         <!-- 8. QUIFF TEXTURIZADO -->
+        <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden flex flex-col hover:border-[#d4af37] transition-all shadow-lg hover:shadow-2xl">
+            <img src="~/img/El-Quiff-Texturizado.jpg" alt="Quiff Texturizado" class="w-full h-64 object-cover border-b-2 border-[#d4af37] cursor-pointer hover:brightness-110 transition-all" onclick="abrirFoto('@Url.Content("~/img/El-Quiff-Texturizado.jpg")', 'Quiff Texturizado')">
+            <div class="p-6 flex flex-col flex-grow text-left">
+                <h3 class="text-2xl font-bold text-[#d4af37] mb-3">Quiff Texturizado</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">Volumen en la delantera peinado hacia arriba y atrás, con un acabado mate, despeinado y texturizado. Moderno y versátil.</p>
+                
+                <div class="flex gap-3 mt-auto">
+                    <button class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-gray-800" onclick="abrirFoto('@Url.Content("~/img/El-Quiff-Texturizado.jpg")', 'Quiff Texturizado')">
+                        🔍 Ver
+                    </button>
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="@ViewBag.Barbero" asp-route-corte="Quiff Texturizado" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-3 rounded text-center transition-colors text-sm hover:bg-[#b5952f]" style="text-decoration: none;">
+                        📅 Agendar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="modalVisorFoto" class="modal-foto-ampliada">
+    <button class="btn-cerrar-foto" onclick="cerrarFoto()">&times;</button>
+    <img id="imagenModal" src="" alt="Corte Ampliado">
+    <h3 id="tituloModal" class="modal-foto-titulo"></h3>
+</div>
+
+@section Scripts {
+    <script>
+        function abrirFoto(rutaImagen, nombreCorte) {
+            document.getElementById('imagenModal').src = rutaImagen;
+            document.getElementById('tituloModal').innerText = nombreCorte;
+            document.getElementById('modalVisorFoto').style.display = 'flex';
+        }
+        function cerrarFoto() {
+            document.getElementById('modalVisorFoto').style.display = 'none';
+            document.getElementById('imagenModal').src = '';
+        }
+        document.getElementById('modalVisorFoto').addEventListener('click', function(e) {
+            if(e.target === this) { cerrarFoto(); }
+        });
+    </script>
+}

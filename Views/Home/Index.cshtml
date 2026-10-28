@@ -1,140 +1,59 @@
 ﻿@{
-    ViewData["Title"] = "Inicio";
+    ViewData["Title"] = "Inicio - Lumina Reserve";
 }
 
-<style>
-    /* Modal Próximamente (Para Reseñas) */
-    .modal-coming-soon { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
-    .modal-content-cs { background: #1a1a1a; padding: 40px; border-radius: 12px; border: 2px solid #d4af37; text-align: center; color: white; max-width: 400px; }
-    .btn-cerrar-modal { background: #d4af37; color: black; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; margin-top: 20px; cursor: pointer; transition: 0.2s;}
-    .btn-cerrar-modal:hover { background: #b5952f; transform: scale(1.05);}
-
-    /* Hero Section (Banner principal) */
-    .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=80') center/cover no-repeat;
-        height: 70vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        border-radius: 12px;
-        margin-top: 10px;
-        border: 1px solid #333;
-    }
-    .titulo-principal { font-size: 5rem; color: #d4af37; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
-    .subtitulo { font-size: 2rem; color: white; font-weight: 300; margin-bottom: 30px; }
-    .hero-content p { font-size: 1.2rem; color: #ccc; margin-bottom: 40px; max-width: 700px; line-height: 1.6; }
-    .btn-reservar-hero { background-color: #d4af37; color: black; padding: 18px 50px; font-size: 1.3rem; font-weight: bold; border: none; border-radius: 8px; text-decoration: none; transition: 0.3s; text-transform: uppercase; display: inline-block;}
-    .btn-reservar-hero:hover { background-color: #b5952f; transform: scale(1.05); color: black; }
-
-    /* Características */
-    .features-section { display: flex; justify-content: space-between; gap: 20px; margin-top: 40px; text-align: center; flex-wrap: wrap; }
-    .feature-box { background: #1a1a1a; padding: 30px; border-radius: 12px; border: 1px solid #333; flex: 1; min-width: 250px; }
-    .feature-box h3 { color: #d4af37; font-size: 1.3rem; margin-bottom: 15px; font-weight: bold;}
-    
-    /* Sección Descubre más de nosotros */
-    .explore-section { margin-top: 60px; text-align: center; padding: 50px 20px; background: #111; border-radius: 12px; border: 1px solid #222; margin-bottom: 40px;}
-    .explore-title { color: white; font-size: 2.2rem; font-weight: bold; margin-bottom: 40px;}
-    .explore-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
-    .icon-card { background: #1a1a1a; width: 160px; height: 160px; border-radius: 15px; border: 1px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; text-decoration: none;}
-    .icon-card:hover { border-color: #d4af37; transform: translateY(-8px); background: #222; box-shadow: 0 10px 20px rgba(0,0,0,0.5);}
-    .icon-card span.emoji { font-size: 3.5rem; margin-bottom: 15px; }
-    .icon-card span.text { color: #d4af37; font-weight: bold; font-size: 1.1rem; }
-</style>
-
-<!-- Modal Próximamente -->
-<div id="modalCS" class="modal-coming-soon">
-    <div class="modal-content-cs">
-        <h2 style="color: #d4af37;">¡En construcción!</h2>
-        <p>La sección de reseñas está siendo desarrollada por el equipo y estará lista pronto.</p>
-        <button class="btn-cerrar-modal" onclick="cerrarComingSoon()">Entendido</button>
-    </div>
-</div>
-
-<div style="max-width: 1200px; margin: auto;">
-    <!-- Banner Principal -->
-    <div class="hero-section">
-        <h1 class="titulo-principal">LUMINA RESERVE</h1>
-        <h2 class="subtitulo">Tu cita con el estilo, en el momento preciso</h2>
-        <div class="hero-content">
-            <p>Somos la plataforma definitiva para gestionar tus citas de barbería y cuidado personal. Evita llamadas, asegura tu lugar y vive la experiencia.</p>
-            <a href="@Url.Action("AgendarCita", "Home")" class="btn-reservar-hero">Agendar Cita Ahora</a>
-        </div>
-    </div>
-
-    <!-- Cajas de Características -->
-    <div class="features-section">
-        <div class="feature-box">
-            <h3>✂️ Expertos Locales</h3>
-            <p style="color: #aaa;">Encuentra los mejores barberos y estilistas listos para definir tu estilo.</p>
-        </div>
-        <div class="feature-box">
-            <h3>⏰ Horario de Atención</h3>
-            <p style="color: #aaa;">Lunes a Sábado<br><strong>09:00 AM - 08:00 PM</strong><br>Domingos cerrado.</p>
-        </div>
-        <div class="feature-box">
-            <h3>💳 Pagos Flexibles</h3>
-            <p style="color: #aaa;">Paga directo en el local. Aceptamos efectivo, tarjetas y transferencias.</p>
-        </div>
-    </div>
-
-    <!-- Explorar: Iconos -->
-    <div class="explore-section">
-        <!-- Adelanto del Portafolio -->
-    <div style="margin-top: 60px; text-align: center;">
-        <h3 style="color: #d4af37; font-size: 2rem; font-weight: bold; margin-bottom: 30px;">Trabajos Destacados</h3>
-        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-            
-            <div style="background: #1a1a1a; border: 1px solid #333; border-radius: 12px; width: 300px; overflow: hidden;">
-                <img src="~/img/Skin-Fade.jpg" style="width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid #d4af37;">
-                <div style="padding: 15px;">
-                    <h4 style="color: white; font-size: 1.2rem; margin: 0;">Skin Fade</h4>
-                </div>
-            </div>
-
-            <div style="background: #1a1a1a; border: 1px solid #333; border-radius: 12px; width: 300px; overflow: hidden;">
-                <img src="~/img/El-Modern-Mullet.jpg" style="width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid #d4af37;">
-                <div style="padding: 15px;">
-                    <h4 style="color: white; font-size: 1.2rem; margin: 0;">Modern Mullet</h4>
-                </div>
-            </div>
-
-            <div style="background: #1a1a1a; border: 1px solid #333; border-radius: 12px; width: 300px; overflow: hidden;">
-                <img src="~/img/Corte-Permanente-Zoomer.jpg" style="width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid #d4af37;">
-                <div style="padding: 15px;">
-                    <h4 style="color: white; font-size: 1.2rem; margin: 0;">Corte Brócoli</h4>
-                </div>
-            </div>
-            
-        </div>
-        <a href="@Url.Action("Portafolio", "Home")" style="display: inline-block; margin-top: 30px; color: #d4af37; text-decoration: none; border: 1px solid #d4af37; padding: 10px 20px; border-radius: 6px; transition: 0.3s;" onmouseover="this.style.background='#d4af37'; this.style.color='black';" onmouseout="this.style.background='transparent'; this.style.color='#d4af37';">
-            Ver catálogo completo →
-        </a>
-    </div>
-        <h3 class="explore-title">Descubre más de nosotros</h3>
-        <div class="explore-grid">
-            <a href="@Url.Action("Portafolio", "Home")" class="icon-card">
-                <span class="emoji">📸</span>
-                <span class="text">Ver Trabajos</span>
-            </a>
-            <div class="icon-card" onclick="mostrarComingSoon()">
-                <span class="emoji">⭐</span>
-                <span class="text">Reseñas</span>
-            </div>
-            <a href="@Url.Action("NuestroEquipo", "Home")" class="icon-card">
-                <span class="emoji">💈</span>
-                <span class="text">Nuestro Equipo</span>
-            </a>
-            <a href="@Url.Action("Ubicacion", "Home")" class="icon-card">
-                <span class="emoji">📍</span>
-                <span class="text">Ubicación</span>
+<!-- Hero Section con Imagen de Fondo -->
+<div class="relative bg-[#121212] text-white py-32 px-4 sm:px-6 lg:px-8 text-center border-b border-gray-800"
+     style="background-image: linear-gradient(rgba(18, 18, 18, 0.8), rgba(18, 18, 18, 0.9)), url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center;">
+    <div class="max-w-4xl mx-auto relative z-10">
+        <h1 class="text-4xl sm:text-6xl font-bold tracking-wider uppercase mb-4 text-white drop-shadow-lg">
+            LUMINA <span class="text-gold" style="color: #d4af37;">RESERVE</span>
+        </h1>
+        <p class="text-xl text-gray-300 italic mb-8 font-light">
+            Tu cita con el estilo, en el momento preciso
+        </p>
+        <p class="text-gray-300 max-w-2xl mx-auto mb-10 text-base leading-relaxed">
+            La plataforma definitiva para gestionar tus citas en Tuxtla Gutiérrez. Evita llamadas, asegura tu lugar en nuestras sucursales Centro o Plaza, y vive la experiencia premium.
+        </p>
+        <div>
+            <a asp-controller="Citas" asp-action="AgendarCita" class="inline-block bg-[#d4af37] text-[#121212] font-bold px-8 py-4 rounded transition-all uppercase tracking-wide hover:bg-[#b5952f] shadow-lg hover:shadow-xl hover:-translate-y-1" style="text-decoration: none;">
+                Agendar Cita Ahora
             </a>
         </div>
     </div>
 </div>
 
-<script>
-    function mostrarComingSoon() { document.getElementById('modalCS').style.display = 'flex'; }
-    function cerrarComingSoon() { document.getElementById('modalCS').style.display = 'none'; }
-</script>
+<!-- Trabajos Destacados / Vista previa -->
+<div class="bg-[#121212] py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto text-center">
+        <h2 class="text-3xl font-bold text-white mb-2 uppercase tracking-wide" style="color: #d4af37;">Tendencias Actuales</h2>
+        <p class="text-gray-400 mb-12">Una probadita de lo que nuestros especialistas pueden hacer por ti.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden shadow-xl hover:border-[#d4af37] transition-colors">
+                <img src="~/img/Skin-Fade.jpg" alt="Skin Fade" class="w-full h-56 object-cover border-b-2 border-[#d4af37]">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-white mb-2">Skin Fade</h3>
+                </div>
+            </div>
+            <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden shadow-xl hover:border-[#d4af37] transition-colors">
+                <img src="~/img/El-Modern-Mullet.jpg" alt="Modern Mullet" class="w-full h-56 object-cover border-b-2 border-[#d4af37]">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-white mb-2">Modern Mullet</h3>
+                </div>
+            </div>
+            <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl overflow-hidden shadow-xl hover:border-[#d4af37] transition-colors">
+                <img src="~/img/Corte-Permanente-Zoomer.jpg" alt="Corte Brócoli" class="w-full h-56 object-cover border-b-2 border-[#d4af37]">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-white mb-2">Corte Brócoli</h3>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <a asp-controller="Portafolio" asp-action="Portafolio" class="inline-block border border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37] hover:text-[#121212] font-bold px-8 py-3 rounded transition-colors uppercase tracking-wide text-sm" style="text-decoration: none;">
+                Ver catálogo completo &rarr;
+            </a>
+        </div>
+    </div>
+</div>

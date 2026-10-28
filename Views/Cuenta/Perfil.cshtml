@@ -1,0 +1,84 @@
+@{
+    ViewData["Title"] = "Mi Perfil";
+}
+
+<div class="bg-[#121212] min-h-screen py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-800">
+    <div class="max-w-4xl mx-auto">
+        
+        <h2 class="text-3xl font-bold text-white uppercase tracking-widest mb-8 border-b border-gray-800 pb-4">
+            Mi <span class="text-[#d4af37]">Perfil</span>
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Tarjeta de Foto y Resumen -->
+            <div class="md:col-span-1 bg-[#1a1a1a] p-6 rounded-xl border border-gray-800 text-center shadow-lg h-fit">
+                
+                <!-- Contenedor del Avatar -->
+                <div id="fotoPreview" class="w-32 h-32 mx-auto rounded-full bg-gray-800 border-4 border-[#d4af37] flex items-center justify-center overflow-hidden mb-4 shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                    <i class="fa-solid fa-user text-5xl text-gray-500"></i>
+                </div>
+                
+                <h3 class="text-xl font-bold text-white mb-1">@ViewBag.Nombre</h3>
+                <p class="text-[#d4af37] text-xs font-bold tracking-widest uppercase mb-4">Admin</p>
+                <p class="text-gray-400 text-sm mb-4">Miembro desde: @ViewBag.MiembroDesde</p>
+                
+                <!-- Selector de archivo oculto y botón que lo activa -->
+                <input type="file" id="fotoPerfilInput" accept="image/*" class="hidden" onchange="actualizarFoto(event)">
+                <button type="button" onclick="document.getElementById('fotoPerfilInput').click()" class="w-full bg-[#262626] hover:bg-[#333] text-white border border-gray-600 font-medium py-2 px-4 rounded transition-colors text-sm cursor-pointer">
+                    Cambiar Foto
+                </button>
+            </div>
+
+            <!-- Formulario de Datos -->
+            <div class="md:col-span-2 bg-[#1a1a1a] p-8 rounded-xl border border-gray-800 shadow-lg">
+                <h3 class="text-xl font-bold text-white mb-6">Información Personal</h3>
+                
+                <form class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Nombre Completo</label>
+                            <input type="text" value="@ViewBag.Nombre" class="w-full bg-[#262626] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#d4af37]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Teléfono</label>
+                            <input type="tel" value="@ViewBag.Telefono" class="w-full bg-[#262626] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#d4af37]">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Correo Electrónico</label>
+                        <input type="email" value="@ViewBag.Correo" class="w-full bg-[#262626] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#d4af37]">
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-800">
+                        <h3 class="text-xl font-bold text-white mb-4">Seguridad</h3>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Nueva Contraseña</label>
+                            <input type="password" placeholder="••••••••" class="w-full bg-[#262626] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#d4af37]">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4">
+                        <button type="submit" class="bg-[#d4af37] text-black font-bold px-8 py-3 rounded hover:bg-[#b5952f] transition-colors tracking-wide uppercase text-sm shadow-md cursor-pointer">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lógica visual para previsualizar la foto cargada -->
+<script>
+    function actualizarFoto(event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('fotoPreview').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover" />`;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

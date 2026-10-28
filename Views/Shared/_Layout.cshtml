@@ -4,115 +4,144 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Lumina Reserve</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Lumina-Reserve-MVC.styles.css" asp-append-version="true" />
+
     <style>
-        body { background-color: #0d0d0d; color: #f1f1f1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
-        /* ---------------------------------------------------
-           BARRA DE NAVEGACIÓN TOTALMENTE PERSONALIZADA
-           --------------------------------------------------- */
-        .navbar-lumina { 
-            background-color: #1a1a1a; 
-            border-bottom: 1px solid #333; 
-            padding: 15px 40px;
-            display: flex; /* Esto empuja los elementos a los lados */
-            justify-content: space-between; /* Izquierda y Derecha */
-            align-items: center;
-        }
-        
-        /* Logo a la izquierda */
-        .navbar-brand-lumina { 
-            color: #d4af37 !important; 
-            font-weight: 900; 
-            font-size: 1.8rem; 
-            text-transform: uppercase; 
-            letter-spacing: 3px; 
-            text-decoration: none;
-        }
-        .navbar-brand-lumina:hover { color: #fff !important; }
-
-        /* Contenedor de botones a la derecha */
-        .nav-links-lumina { 
-            display: flex; 
-            gap: 15px; 
-            align-items: center;
-            margin: 0;
-            padding: 0;
-            list-style: none; /* Quita los puntos de lista */
-        }
-        
-        /* Botones normales */
-        .nav-link-lumina { 
-            color: #ccc !important; 
-            font-weight: bold; 
-            font-size: 1.1rem; 
-            text-decoration: none; 
-            transition: 0.3s; 
-            padding: 8px 15px; 
-            border-radius: 6px;
-        }
-        .nav-link-lumina:hover { 
-            color: #d4af37 !important; 
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        /* Botón especial de Agendar */
-        .btn-nav-agendar { 
-            background-color: transparent; 
-            color: #d4af37 !important; 
-            border: 2px solid #d4af37; 
-            padding: 8px 25px !important; 
-            border-radius: 6px; 
-            transition: 0.3s; 
-            margin-left: 10px;
-            text-transform: uppercase;
-        }
-        .btn-nav-agendar:hover { 
-            background-color: #d4af37 !important; 
-            color: black !important; 
-        }
-
-        footer { background-color: #1a1a1a; color: #888; border-top: 1px solid #333; text-align: center; padding: 20px 0; margin-top: 50px; }
+        .text-gold { color: #d4af37; }
+        .bg-gold { background-color: #d4af37; }
+        .border-gold { border-color: #d4af37; }
+        .hover-gold:hover { color: #d4af37; }
+        .bg-stripes { background: repeating-linear-gradient(45deg, #1f2937, #1f2937 5px, #374151 5px, #374151 10px); }
     </style>
 </head>
-<body>
+<body class="bg-[#121212] text-gray-200 font-sans flex flex-col min-h-screen">
+    
     <header>
-        <!-- Aquí aplicamos la nueva barra -->
-        <nav class="navbar-lumina">
-            <!-- 1. Nombre a la izquierda -->
-            <a class="navbar-brand-lumina" asp-controller="Home" asp-action="Index">LUMINA RESERVE</a>
+        <nav class="bg-[#1e1e1e] border-b border-gray-800 shadow-md relative z-50">
+            @{
+                // SIMULADOR DE SESIÓN
+                string userRole = "Admin"; 
+                string userName = "Irving"; 
+                string userEmail = "irving@lumina.com";
+                bool isLogged = (userRole != "Visitante");
+            }
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-20 items-center">
+                    
+                    <div class="flex-shrink-0 flex items-center">
+                        <a asp-controller="Home" asp-action="Index" class="text-2xl font-bold text-gold tracking-widest uppercase" style="text-decoration: none;">
+                            Lumina Reserve
+                        </a>
+                    </div>
+                    
+                    <div class="hidden md:flex space-x-6 items-center">
+                        <a asp-controller="Home" asp-action="Index" class="text-gray-300 hover-gold transition-colors font-medium" style="text-decoration: none;">Inicio</a>
+                        
+                        @if(isLogged) {
+                        }
 
-            <!-- 2. Botones a la derecha -->
-            <ul class="nav-links-lumina">
-                <li><a class="nav-link-lumina" asp-controller="Home" asp-action="NuestroEquipo">Equipo</a></li>
-                <li><a class="nav-link-lumina" asp-controller="Home" asp-action="Portafolio">Fotos / Trabajos</a></li>
-                <li><a class="nav-link-lumina" asp-controller="Home" asp-action="Ubicacion">Ubicación</a></li>
-                
-                <!-- Enlace de Reseñas añadido -->
-                <!-- Enlace de Reseñas apuntando al nuevo controlador -->
-                <li><a class="nav-link-lumina" asp-controller="Resenas" asp-action="Index">Reseñas</a></li>
-                
-                <li><a class="nav-link-lumina btn-nav-agendar" asp-controller="Home" asp-action="AgendarCita">Agendar Cita</a></li>
-            </ul>
+                        <a asp-controller="Nosotros" asp-action="NuestroEquipo" class="text-gray-300 hover-gold transition-colors font-medium" style="text-decoration: none;">Equipo</a>
+                        <a asp-controller="Portafolio" asp-action="Portafolio" class="text-gray-300 hover-gold transition-colors font-medium" style="text-decoration: none;">Fotos / Trabajos</a>
+                        <a asp-controller="Nosotros" asp-action="Ubicacion" class="text-gray-300 hover-gold transition-colors font-medium" style="text-decoration: none;">Ubicación</a>
+                        <a asp-controller="Resenas" asp-action="Resenas" class="text-gray-300 hover-gold transition-colors font-medium" style="text-decoration: none;">Reseñas</a>
+                        
+                        <a asp-controller="Citas" asp-action="AgendarCita" class="border border-gold text-gold hover:bg-gold hover:text-[#121212] px-4 py-2 rounded transition-colors font-bold uppercase tracking-wide text-xs ml-2" style="text-decoration: none;">
+                            Agendar Cita
+                        </a>
+                    </div>
+
+                    <div class="flex items-center relative ml-4">
+                        @if(isLogged) {
+                            <button id="userMenuBtn" class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors focus:outline-none cursor-pointer p-1 rounded-full hover:bg-[#262626]">
+                                <div class="w-10 h-10 rounded-full bg-stripes border-2 border-gray-600 flex items-center justify-center overflow-hidden shadow-inner">
+                                    <i class="fa-solid fa-user text-gray-400 opacity-50"></i>
+                                </div>
+                                <i class="fa-solid fa-ellipsis-vertical text-xl px-2"></i>
+                            </button>
+
+                            <div id="userDropdown" class="hidden absolute right-0 top-14 mt-2 w-64 bg-[#1a1a1a] border border-gray-800 rounded-xl shadow-2xl py-2 z-50 transition-opacity">
+                                
+                                <div class="px-4 py-3 border-b border-gray-800">
+                                    <p class="text-white text-sm font-bold m-0 leading-tight">@userName</p>
+                                    <p class="text-gray-400 text-xs m-0 truncate">@userEmail</p>
+                                    <span class="inline-block mt-2 bg-black border border-[#d4af37] text-[#d4af37] text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest">
+                                        @userRole
+                                    </span>
+                                </div>
+                                
+                                <div class="py-2">
+                                    <!-- RUTAS CONECTADAS: Perfil e Historial -->
+                                    <a asp-controller="Cuenta" asp-action="Perfil" class="block px-4 py-2 text-sm text-gray-300 hover:bg-[#262626] hover:text-[#d4af37] transition-colors" style="text-decoration: none;">
+                                        <i class="fa-regular fa-id-badge w-5 text-center mr-1"></i> Mi Perfil
+                                    </a>
+                                    <a asp-controller="Citas" asp-action="Historial" class="block px-4 py-2 text-sm text-gray-300 hover:bg-[#262626] hover:text-[#d4af37] transition-colors" style="text-decoration: none;">
+                                        <i class="fa-solid fa-clock-rotate-left w-5 text-center mr-1"></i> Historial de Citas
+                                    </a>
+                                    
+                                    @if(userRole == "Admin") {
+                                        <div class="border-t border-gray-800 my-1"></div>
+                                        <a asp-controller="Admin" asp-action="Dashboard" class="block px-4 py-2 text-sm text-red-400 hover:bg-red-900 hover:bg-opacity-30 transition-colors" style="text-decoration: none;">
+                                            <i class="fa-solid fa-chart-line w-5 text-center mr-1"></i> Panel de Administración
+                                        </a>
+                                    }
+                                    
+                                    <div class="border-t border-gray-800 my-1"></div>
+                                    <a asp-controller="Cuenta" asp-action="Logout" class="block px-4 py-2 text-sm text-gray-400 hover:bg-[#262626] hover:text-red-500 transition-colors" style="text-decoration: none;">
+                                        <i class="fa-solid fa-right-from-bracket w-5 text-center mr-1"></i> Cerrar Sesión
+                                    </a>
+                                </div>
+                            </div>
+                        } else {
+                            <a asp-controller="Cuenta" asp-action="Login" class="text-gray-300 hover:text-[#d4af37] transition-colors flex items-center gap-2 font-medium bg-[#1a1a1a] border border-gray-700 px-4 py-2 rounded-full" style="text-decoration: none;">
+                                <i class="fa-regular fa-user text-lg"></i> Acceder
+                            </a>
+                        }
+                    </div>
+                    
+                </div>
+            </div>
         </nav>
     </header>
 
-    <div class="container mt-4">
-        <main role="main" class="pb-3">
-            <!-- Aquí se inyecta el contenido de Index, AgendarCita, etc. -->
+    <div class="flex-grow">
+        <main role="main" class="w-full">
             @RenderBody()
         </main>
     </div>
 
-    <footer>
-        <div class="container">
-            &copy; 2026 - Lumina Reserve - Tuxtla Gutiérrez, Chiapas
+    <footer class="bg-[#1e1e1e] border-t border-gray-800 text-gray-400 py-6 text-center mt-auto">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>&copy; 2026 - Lumina Reserve - Todos los derechos reservados.</p>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const userMenuBtn = document.getElementById('userMenuBtn');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            if(userMenuBtn && userDropdown) {
+                userMenuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('hidden');
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if(!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+                        userDropdown.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

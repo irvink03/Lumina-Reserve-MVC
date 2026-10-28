@@ -1,0 +1,156 @@
+@model Lumina_Reserve_MVC.Models.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Panel de Administración";
+}
+
+<div class="bg-[#0a0a0a] min-h-screen p-8 font-sans border-t border-gray-800">
+    <div class="max-w-7xl mx-auto">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-gray-800 pb-4 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-white uppercase tracking-wider">Dashboard <span class="text-red-500">Admin</span></h1>
+                <p class="text-gray-400">Resumen financiero y operativo de Lumina Reserve.</p>
+            </div>
+            <div class="flex flex-col items-end gap-3">
+                <div class="text-right">
+                    <p class="text-[#d4af37] font-bold text-xl">@DateTime.Now.ToString("dd/MM/yyyy")</p>
+                    <p class="text-gray-500 text-sm">Sucursal: Todas</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="bg-[#262626] hover:bg-[#333] text-white text-sm px-3 py-1.5 rounded border border-gray-700 transition-colors">
+                        <i class="fa-solid fa-plus mr-1 text-[#d4af37]"></i> Cliente de Paso
+                    </button>
+                    <button class="bg-[#262626] hover:bg-[#333] text-white text-sm px-3 py-1.5 rounded border border-gray-700 transition-colors">
+                        <i class="fa-solid fa-file-invoice-dollar mr-1 text-red-400"></i> Registrar Gasto
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-[#1a1a1a] p-6 rounded-xl border border-green-900 border-l-4 border-l-green-500 shadow-lg relative overflow-hidden">
+                <div class="flex justify-between items-start relative z-10">
+                    <div>
+                        <p class="text-gray-400 text-sm font-bold uppercase tracking-wider">Ingresos de Hoy</p>
+                        <h3 class="text-4xl font-bold text-white mt-2">$@Model.IngresosHoy.ToString("N2")</h3>
+                    </div>
+                    <div class="bg-green-900 bg-opacity-30 p-3 rounded-lg text-green-500">
+                        <i class="fa-solid fa-money-bill-wave text-2xl"></i>
+                    </div>
+                </div>
+                <p class="text-green-500 text-sm mt-4 font-medium relative z-10"><i class="fa-solid fa-arrow-up"></i> +15% vs ayer</p>
+            </div>
+
+            <div class="bg-[#1a1a1a] p-6 rounded-xl border border-blue-900 border-l-4 border-l-blue-500 shadow-lg">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm font-bold uppercase tracking-wider">Citas Completadas</p>
+                        <h3 class="text-4xl font-bold text-white mt-2">@Model.CitasCompletadas</h3>
+                    </div>
+                    <div class="bg-blue-900 bg-opacity-30 p-3 rounded-lg text-blue-500">
+                        <i class="fa-solid fa-calendar-check text-2xl"></i>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm mt-4">@Model.CitasPendientes citas pendientes hoy</p>
+            </div>
+
+            <div class="bg-[#1a1a1a] p-6 rounded-xl border border-[#d4af37] border-opacity-30 border-l-4 border-l-[#d4af37] shadow-lg">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm font-bold uppercase tracking-wider">Nuevos Registros</p>
+                        <h3 class="text-4xl font-bold text-white mt-2">@Model.NuevosRegistros</h3>
+                    </div>
+                    <div class="bg-[#d4af37] bg-opacity-10 p-3 rounded-lg text-[#d4af37]">
+                        <i class="fa-solid fa-user-plus text-2xl"></i>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm mt-4">Nivel Plata asignado</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <div class="lg:col-span-2 bg-[#1a1a1a] rounded-xl border border-gray-800 shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4 border-b border-gray-800 pb-2">
+                    <h3 class="text-xl font-bold text-white">Agenda Activa (Hoy)</h3>
+                    <span class="bg-[#d4af37] text-black text-xs font-bold px-2 py-1 rounded">En tiempo real</span>
+                </div>
+                
+                <div class="space-y-4">
+                    @foreach (var cita in Model.AgendaActiva)
+                    {
+                        var borderClass = cita.Estado == "En Curso" ? "border-l-4 border-red-500 bg-[#262626]" : "border border-gray-800 bg-[#121212]";
+                        var textClass = cita.Estado == "En Curso" ? "text-red-400 animate-pulse" : "text-gray-500";
+                        
+                        <div class="flex items-center gap-4 p-3 rounded-lg @borderClass">
+                            <div class="text-center min-w-[60px]">
+                                <p class="text-white font-bold text-lg">@cita.Hora</p>
+                                <p class="@textClass text-[10px] uppercase tracking-wider font-bold">@cita.Estado</p>
+                            </div>
+                            <div class="flex-grow">
+                                <p class="text-white font-bold">@cita.Cliente</p>
+                                <p class="text-gray-400 text-sm">@cita.Servicio</p>
+                            </div>
+                            <div class="text-right hidden sm:block">
+                                <p class="text-gray-300 text-sm"><i class="fa-solid fa-scissors text-gray-500 mr-1"></i> @cita.Barbero</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="bg-[#1a1a1a] rounded-xl border border-gray-800 shadow-lg p-6">
+                <h3 class="text-xl font-bold text-white mb-4 border-b border-gray-800 pb-2">Rendimiento (Hoy)</h3>
+                
+                <div class="space-y-5">
+                    @foreach (var barbero in Model.RendimientoEquipo)
+                    {
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-300 font-bold">@barbero.Nombre</span>
+                                <span class="text-[#d4af37] font-bold">$@barbero.Ingresos.ToString("N0")</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-[#d4af37] h-2 rounded-full" style="width: @barbero.Porcentaje%"></div>
+                            </div>
+                            <p class="text-gray-500 text-xs mt-1 text-right">@barbero.Cortes cortes completados</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-[#1a1a1a] rounded-xl border border-gray-800 overflow-hidden shadow-lg">
+            <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-white">Últimos Pagos Recibidos</h3>
+                <button class="text-sm text-[#d4af37] hover:underline">Ver historial completo</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-[#222] text-gray-400 text-sm uppercase tracking-wider">
+                            <th class="p-4 font-medium">Cliente</th>
+                            <th class="p-4 font-medium">Servicio</th>
+                            <th class="p-4 font-medium">Método de Pago</th>
+                            <th class="p-4 font-medium">Barbero</th>
+                            <th class="p-4 font-medium text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-300">
+                        @foreach (var pago in Model.UltimosPagos)
+                        {
+                            var colorPago = pago.MetodoPago == "Transferencia" ? "bg-green-900 text-green-400 border-none" : "bg-gray-800 text-gray-300 border border-gray-600";
+                            
+                            <tr class="border-b border-gray-800 hover:bg-[#262626] transition-colors">
+                                <td class="p-4 font-bold text-white">@pago.Cliente</td>
+                                <td class="p-4">@pago.Servicio</td>
+                                <td class="p-4"><span class="@colorPago text-xs px-2 py-1 rounded">@pago.MetodoPago</span></td>
+                                <td class="p-4 text-gray-400">@pago.Barbero</td>
+                                <td class="p-4 text-right font-bold text-[#d4af37]">$@pago.Total.ToString("N2")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>          

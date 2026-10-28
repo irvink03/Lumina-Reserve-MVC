@@ -6,25 +6,6 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<style>
-    /* Estilos personalizados adicionales */
-    .bg-barber-dark { background-color: #121212; }
-    .bg-barber-card { background-color: #1e1e1e; }
-    .text-gold { color: #d4af37; }
-    .border-gold { border-color: #d4af37; }
-    .btn-gold { background-color: #d4af37; color: #121212; }
-    .btn-gold:hover { background-color: #b5952f; }
-    
-    .star-rating i {
-        color: #555;
-        cursor: pointer;
-        transition: color 0.2s;
-    }
-    .star-rating i.active, .star-rating i:hover, .star-rating i.hover-active {
-        color: #d4af37;
-    }
-</style>
-
 <div class="bg-barber-dark min-h-screen text-gray-200 py-12 px-4 sm:px-6 lg:px-8 font-sans">
     <div class="max-w-7xl mx-auto">
         
@@ -223,8 +204,6 @@
                 reviewForm.reset();
                 ratingValueInput.value = '';
                 stars.forEach(s => s.classList.remove('active', 'hover-active'));
-
-                // NOTA MVC: Aquí en el futuro usarás fetch() para enviar 'newReview' a tu acción 'GuardarReseña'
             });
 
             // Renderizar datos iniciales al cargar

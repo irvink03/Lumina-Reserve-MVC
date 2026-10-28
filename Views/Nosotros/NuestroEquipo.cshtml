@@ -1,0 +1,86 @@
+@{
+    ViewData["Title"] = "Nuestro Equipo";
+}
+
+<div class="bg-[#121212] min-h-screen text-gray-200 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-white mb-4 uppercase tracking-wider">Nuestros <span style="color: #d4af37;">Especialistas</span></h1>
+            <p class="text-gray-400 max-w-2xl mx-auto">Profesionales dedicados al arte de la barbería y la imagen personal.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Miembro 1: Irvin -->
+            <div class="bg-[#1e1e1e] border border-gray-800 rounded-lg overflow-hidden shadow-xl flex flex-col">
+                <img src="~/img/irvin.jpg" alt="Irvin Chavarría" class="w-full h-64 object-cover border-b-2 border-[#d4af37]">
+                <div class="p-6 flex-grow">
+                    <h3 class="text-2xl font-bold text-white mb-1">Irvin Chavarría</h3>
+                    <p class="text-xs uppercase tracking-wider mb-4 font-semibold" style="color: #d4af37;">Maestro Barbero / Fundador</p>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Especialista en cortes urbanos y fade perfecto. Estilo impecable y atención al detalle.</p>
+                </div>
+                <div class="p-6 pt-0 flex gap-3">
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="Irvin Chavarría" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-4 rounded text-center transition-colors uppercase text-sm hover:bg-[#b5952f]" style="text-decoration: none;">Agendar</a>
+                    <a asp-controller="Portafolio" asp-action="Portafolio" asp-route-barbero="Irvin Chavarría" class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-4 rounded text-center transition-colors uppercase text-sm hover:bg-gray-800" style="text-decoration: none;">Ver trabajos</a>
+                </div>
+            </div>
+
+            <!-- Miembro 2: Fernando -->
+            <div class="bg-[#1e1e1e] border border-gray-800 rounded-lg overflow-hidden shadow-xl flex flex-col">
+                <img src="~/img/fernando.jpg" alt="Fernando Rodríguez" class="w-full h-64 object-cover border-b-2 border-[#d4af37]">
+                <div class="p-6 flex-grow">
+                    <h3 class="text-2xl font-bold text-white mb-1">Fernando Rodríguez</h3>
+                    <p class="text-xs uppercase tracking-wider mb-4 font-semibold" style="color: #d4af37;">Especialista Clásico</p>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Cortes tradicionales a tijera y arreglos de barba con toalla caliente.</p>
+                </div>
+                <div class="p-6 pt-0 flex gap-3">
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="Fernando Rodríguez" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-4 rounded text-center transition-colors uppercase text-sm hover:bg-[#b5952f]" style="text-decoration: none;">Agendar</a>
+                    <a asp-controller="Portafolio" asp-action="Portafolio" asp-route-barbero="Fernando Rodríguez" class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-4 rounded text-center transition-colors uppercase text-sm hover:bg-gray-800" style="text-decoration: none;">Ver trabajos</a>
+                </div>
+            </div>
+
+            <!-- Miembro 3: Diego -->
+            <div class="bg-[#1e1e1e] border border-gray-800 rounded-lg overflow-hidden shadow-xl flex flex-col">
+                <img src="~/img/diego.jpg" alt="Diego Silva" class="w-full h-64 object-cover border-b-2 border-[#d4af37]">
+                <div class="p-6 flex-grow">
+                    <h3 class="text-2xl font-bold text-white mb-1">Diego Silva</h3>
+                    <p class="text-xs uppercase tracking-wider mb-4 font-semibold" style="color: #d4af37;">Estilista y Colorista</p>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Experto en colorimetría, texturizados y tratamientos faciales profundos.</p>
+                </div>
+                <div class="p-6 pt-0 flex gap-3">
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="Diego Silva" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-4 rounded text-center transition-colors uppercase text-sm hover:bg-[#b5952f]" style="text-decoration: none;">Agendar</a>
+                    <a asp-controller="Portafolio" asp-action="Portafolio" asp-route-barbero="Diego Silva" class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-4 rounded text-center transition-colors uppercase text-sm hover:bg-gray-800" style="text-decoration: none;">Ver trabajos</a>
+                </div>
+            </div>
+
+            <!-- Miembro 4: Erick -->
+            <div class="bg-[#1e1e1e] border border-gray-800 rounded-lg overflow-hidden shadow-xl flex flex-col">
+                <img src="~/img/erick.jpg" alt="Erick Ulises" class="w-full h-64 object-cover border-b-2 border-[#d4af37]">
+                <div class="p-6 flex-grow">
+                    <h3 class="text-2xl font-bold text-white mb-1">Erick Ulises</h3>
+                    <p class="text-xs uppercase tracking-wider mb-4 font-semibold" style="color: #d4af37;">Diseño y Freestyle</p>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Creativo en trazos libres, figuras geométricas y estilos modernos vanguardistas.</p>
+                </div>
+                <div class="p-6 pt-0 flex gap-3">
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="Erick Ulises" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-4 rounded text-center transition-colors uppercase text-sm hover:bg-[#b5952f]" style="text-decoration: none;">Agendar</a>
+                    <a asp-controller="Portafolio" asp-action="Portafolio" asp-route-barbero="Erick Ulises" class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-4 rounded text-center transition-colors uppercase text-sm hover:bg-gray-800" style="text-decoration: none;">Ver trabajos</a>
+                </div>
+            </div>
+
+            <!-- Miembro 5: Geovany (Ivan) -->
+            <div class="bg-[#1e1e1e] border border-gray-800 rounded-lg overflow-hidden shadow-xl flex flex-col">
+                <img src="~/img/ivan.jpg" alt="Geovany Iván" class="w-full h-64 object-cover border-b-2 border-[#d4af37]">
+                <div class="p-6 flex-grow">
+                    <h3 class="text-2xl font-bold text-white mb-1">Geovany Iván</h3>
+                    <p class="text-xs uppercase tracking-wider mb-4 font-semibold" style="color: #d4af37;">Cuidado Integral</p>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Especialista en mantenimiento de barba completa, perfilado con navaja y masajes capilares.</p>
+                </div>
+                <div class="p-6 pt-0 flex gap-3">
+                    <a asp-controller="Citas" asp-action="AgendarCita" asp-route-barbero="Geovany Iván" class="flex-1 bg-[#d4af37] text-[#121212] font-bold py-2 px-4 rounded text-center transition-colors uppercase text-sm hover:bg-[#b5952f]" style="text-decoration: none;">Agendar</a>
+                    <a asp-controller="Portafolio" asp-action="Portafolio" asp-route-barbero="Geovany Iván" class="flex-1 bg-transparent text-white border border-gray-600 font-bold py-2 px-4 rounded text-center transition-colors uppercase text-sm hover:bg-gray-800" style="text-decoration: none;">Ver trabajos</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
