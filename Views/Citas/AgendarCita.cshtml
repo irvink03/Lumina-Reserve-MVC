@@ -1,11 +1,26 @@
+@model IEnumerable<Lumina_Reserve_MVC.Models.Corte>
 @{
     ViewData["Title"] = "Agendar Cita";
     var barberoSeleccionado = Context.Request.Query["barbero"].ToString();
     var corteSeleccionado = Context.Request.Query["corte"].ToString();
-    
-    // NUEVO: Atrapamos el cupón de la URL
-    var cuponSeleccionado = Context.Request.Query["cupon"].ToString();
+
+    // Extraemos las listas que mandamos desde el controlador
+    var sucursales = ViewBag.Sucursales as List<Lumina_Reserve_MVC.Models.Sucursale> ?? new List<Lumina_Reserve_MVC.Models.Sucursale>();
+    var barberos = ViewBag.Barberos as List<Lumina_Reserve_MVC.Models.Empleado> ?? new List<Lumina_Reserve_MVC.Models.Empleado>();
+    var cortes = ViewBag.Cortes as List<Lumina_Reserve_MVC.Models.Corte> ?? new List<Lumina_Reserve_MVC.Models.Corte>();
+    var categorias = cortes?.Select(c => c.Categoria).Distinct().ToList() ?? new List<string>();
+
+    // Barberos agrupados por sucursal, listos para convertirse en JSON (respeta acentos)
+    var barberosPorSucursalData = barberos
+        .GroupBy(b => b.Sucursal.Nombre)
+        .ToDictionary(
+            g => g.Key,
+            g => new[] { new { nombre = "Cualquier barbero disponible", valor = "" } }
+                .Concat(g.Select(b => new { nombre = b.Usuario.NombreCompleto + " - " + b.Especialidad, valor = b.Id.ToString() }))
+                .ToList());
 }
+
+<!-- Tus estilos originales sin tocar -->
 <style>
     .lumina-container { display: flex; flex-wrap: wrap; gap: 20px; padding: 0 20px 20px 20px; max-width: 1200px; margin: auto; }
     .card { background-color: #1a1a1a; padding: 25px; border-radius: 12px; border: 1px solid #333; }
@@ -35,178 +50,183 @@
     .distribucion-equipos { background: #111; padding: 10px; border-radius: 6px; font-size: 0.85rem; color: #888; margin-bottom: 25px; border: 1px dashed #333;}
 </style>
 
-<div class="lumina-container">
-    <div class="col-negocio card">
-        <h2 style="color: white; margin-bottom: 5px;">Lumina Reserve</h2>
-        <p style="color: #888; font-size: 0.95rem;">⭐ 4.9 (120 reseñas) · Barbería Premium<br>Tuxtla Gutiérrez, Chiapas, MX</p>
+<!-- ALERTAS DINÁMICAS -->
+@if (TempData["Exito"] != null)
+{
+    <div class="alert alert-success" style="background-color: #28a745; color: white; padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center; max-width: 1200px; margin: 0 auto 20px auto;">
+        @TempData["Exito"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" style="background-color: #dc3545; color: white; padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center; max-width: 1200px; margin: 0 auto 20px auto;">
+        @TempData["Error"]
+    </div>
+}
+
+<!-- EL FORMULARIO ENVUELVE TODO TU CÓDIGO HTML -->
+<form asp-controller="Citas" asp-action="ConfirmarReserva" method="post" id="formulario-cita">
+    <div class="lumina-container">
         
-        <h4 style="color: #d4af37; margin-top: 30px; font-size: 1.1rem; border-bottom: 1px solid #333; padding-bottom: 10px;">Tu Ubicación y Profesional</h4>
-        
-        <label class="input-label" style="margin-top: 15px;">1. Elige tu sucursal:</label>
-        <div class="radio-sucursal">
-            <label><input type="radio" name="sucursal" value="Centro" onchange="filtrarBarberos()" checked> Centro</label>
-            <label><input type="radio" name="sucursal" value="Plaza" onchange="filtrarBarberos()"> Plaza</label>
-        </div>
-        
-        <div class="distribucion-equipos">
-            <span style="color:#d4af37">📍 Centro:</span> Irvin, Fernando, Geovany<br>
-            <span style="color:#d4af37">📍 Plaza:</span> Diego, Erick
+        <!-- COLUMNA 1: SUCURSAL Y BARBERO -->
+        <div class="col-negocio card">
+            <h2 style="color: white; margin-bottom: 5px;">Lumina Reserve</h2>
+            <p style="color: #888; font-size: 0.95rem;">
+                <span style="color:#d4af37">&#9733; 4.9 (120 reseñas)</span> - Barbería Premium<br>Tuxtla Gutiérrez, Chiapas, MX
+            </p>
+
+            <h4 style="color: #d4af37; margin-top: 30px; font-size: 1.1rem; border-bottom: 1px solid #333; padding-bottom: 10px;">Tu Ubicación y Profesional</h4>
+            <label class="input-label" style="margin-top: 15px;">1. Elige tu sucursal:</label>
+            
+            <div class="radio-sucursal">
+                @foreach(var sucursal in sucursales)
+                {
+                    <label>
+                        <!-- Agregado name="SucursalId" y value dinámico -->
+                        <input type="radio" name="SucursalId" value="@sucursal.Id" onchange="filtrarBarberos()" @(sucursal.Nombre == "Centro" ? "checked" : "")> 
+                        @sucursal.Nombre
+                    </label>
+                }
+            </div>
+
+            <div class="distribucion-equipos">
+                <span style="color:#d4af37">Centro:</span> Irvin, Fernando, Geovany<br>
+                <span style="color:#d4af37">Plaza:</span> Diego, Erick
+            </div>
+
+            <div class="input-grupo">
+                <label class="input-label">2. ¿Con quién deseas agendar?</label>
+                <!-- Agregado name="BarberoId" -->
+                <select id="selector-barbero" name="BarberoId" class="input-oscuro" onchange="actualizarResumen()">
+                    <!-- JS inyecta esto -->
+                </select>
+            </div>
+
+            <div style="background: rgba(212, 175, 55, 0.1); border-left: 3px solid #d4af37; padding: 10px; margin-top: 20px;">
+                <p style="color: #ccc; font-size: 0.85rem; margin: 0; line-height: 1.4;">
+                    <span style="color: #d4af37;"><strong>&#8987; Disponibilidad en Tiempo Real:</strong></span><br>
+                    Si el barbero está ocupado cortando o tiene cita, ese horario se bloqueará automáticamente.
+                </p>
+            </div>
         </div>
 
-        <div class="input-grupo">
-            <label class="input-label">2. ¿Con quién deseas agendar?</label>
-            <select id="selector-barbero" class="input-oscuro" onchange="actualizarResumen()">
-                <!-- JS inyecta esto -->
-            </select>
-        </div>
-        
-        <div style="background: rgba(212, 175, 55, 0.1); border-left: 3px solid #d4af37; padding: 10px; margin-top: 20px;">
-            <p style="color: #ccc; font-size: 0.85rem; margin: 0; line-height: 1.4;">
-                <span style="color: #d4af37;">⏳ <strong>Disponibilidad en Tiempo Real:</strong></span><br>
-                Si el barbero está ocupado cortando o tiene cita, ese horario se bloqueará automáticamente.
+        <!-- COLUMNA 2: SERVICIOS Y FECHAS -->
+        <div class="col-servicios card">
+            <h3 class="titulo-seccion">1. Selecciona tus servicios</h3>
+            
+            <!-- ACORDEÓN DINÁMICO DE SERVICIOS LEYENDO SQL -->
+            @foreach (var categoria in categorias)
+            {
+                var idCategoriaVal = "cat-" + categoria.Replace(" ", "-").ToLower();
+                
+                <button type="button" class="categoria-btn" onclick="toggleCategoria('@idCategoriaVal')">
+                    @categoria <span>&#9660;</span>
+                </button>
+                <div id="@idCategoriaVal" class="categoria-contenido @(categoria == "Cortes en Tendencia" ? "show" : "")">
+                    
+                    @foreach (var corte in cortes.Where(c => c.Categoria == categoria))
+                    {
+                        <label class="servicio-item">
+                            <div style="display: flex; align-items: center;">
+                                <!-- Agregado name="CortesSeleccionados" -->
+                                <input class="form-check-input" type="checkbox" name="CortesSeleccionados" value="@corte.Id" onchange="toggleServicioCheckbox(this, @corte.Precio, '@corte.Nombre')">
+                                <div>
+                                    <strong>@corte.Nombre</strong>
+                                    <p style="margin: 0; color: #aaa; font-size: 0.85rem;">@corte.Descripcion</p>
+                                </div>
+                            </div>
+                            <div class="precio">$@corte.Precio</div>
+                        </label>
+                    }
+                </div>
+            }
+
+            <h3 class="titulo-seccion" style="margin-top: 40px;">2. Fecha, Hora y Pago</h3>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 15px;">
+                <div class="input-grupo" style="flex: 1; min-width: 200px;">
+                    <label class="input-label">Elige la fecha:</label>
+                    <!-- Agregado name="FechaCita" -->
+                    <input type="date" name="FechaCita" id="selector-fecha" class="input-oscuro" onchange="validarDisponibilidad()" required>
+                </div>
+                <div class="input-grupo" style="flex: 1; min-width: 200px;">
+                    <label class="input-label">Elige la hora (10:00 a 20:00):</label>
+                    <!-- Agregado name="HoraCita" -->
+                    <input type="time" name="HoraCita" id="selector-hora" class="input-oscuro" min="10:00" max="20:00" value="10:00" onchange="validarDisponibilidad()" required>
+                </div>
+            </div>
+            
+            <div class="input-grupo">
+                <label class="input-label">Método de Pago (Para asegurar el lugar):</label>
+                <!-- Agregado name="MetodoPago" -->
+                <select name="MetodoPago" id="selector-pago" class="input-oscuro" onchange="actualizarResumen()">
+                    <option value="Efectivo (Pago en sucursal)">Efectivo (Pago en sucursal)</option>
+                    <option value="Transferencia (Anticipo 50%)">Transferencia (Anticipo 50% para asegurar lugar)</option>
+                </select>
+            </div>
+            
+            <p id="alerta-ocupado" style="color: #ff4d4d; font-size: 0.95rem; display: none; margin-top: 15px; padding: 10px; background: rgba(255,0,0,0.1); border-left: 3px solid #ff4d4d;"> 
+                <strong>Horario fuera de servicio u ocupado.</strong> Nuestro horario es de 10 AM a 8 PM. Verifica tu selección o el barbero ya tiene cita.
             </p>
         </div>
+
+        <!-- COLUMNA 3: RESUMEN -->
+        <div class="col-reserva card">
+            <h3 class="titulo-seccion">Tu reserva</h3>
+            <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">SUCURSAL</p>
+            <p id="resumen-sucursal" style="font-weight: bold; margin: 0 0 15px 0; font-size: 1.1rem; color: #fff;">Centro</p>
+            
+            <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">BARBERO SELECCIONADO</p>
+            <p id="resumen-barbero" style="font-weight: bold; margin: 0 0 15px 0; font-size: 1.1rem; color: #d4af37;">Cualquier barbero disponible</p>
+            
+            <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">SERVICIOS</p>
+            <p id="resumen-servicios" style="font-weight: bold; margin: 0 0 15px 0; font-size: 0.95rem; color: #fff;">Ningún servicio seleccionado</p>
+            
+            <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">FECHA Y HORA</p>
+            <p id="resumen-fecha-hora" style="font-weight: bold; margin: 0 0 15px 0; color: #fff;">Selecciona fecha y hora</p>
+            
+            <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">MÉTODO DE PAGO</p>
+            <p id="resumen-pago" style="font-weight: bold; margin: 0 0 20px 0; color: #4CAF50;">Efectivo (Pago en sucursal)</p>
+            
+            <hr style="border-color: #333; margin-bottom: 20px;">
+            <div style="text-align: right; margin-bottom: 15px;">
+                <div style="display: flex; justify-content: space-between; font-size: 1.3rem;">
+                    <span style="color: white;">Total</span>
+                    <span class="precio" id="resumen-total">$0</span>
+                </div>
+            </div>
+            
+            <!-- Asegurado type="submit" para que el formulario se envíe a SQL Server -->
+            <button type="submit" class="btn-confirmar" id="btn-submit">Confirmar reserva</button>
+        </div>
     </div>
-
-    <div class="col-servicios card">
-        <h3 class="titulo-seccion">1. Selecciona tus servicios</h3>
-
-        <!-- NUEVO: Letrero de Cupón Activado -->
-        @if(cuponSeleccionado == "LUMINA-FREE") {
-            <div style="background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 20px;">
-                <h4 style="color: #d4af37; font-weight: bold; font-size: 1.1rem; margin: 0 0 5px 0;">🎁 ¡Corte Gratis Desbloqueado!</h4>
-                <p style="color: #ccc; font-size: 0.9rem; margin: 0;">Selecciona el corte que desees abajo y el sistema lo descontará automáticamente de tu total.</p>
-            </div>
-        }
-        
-        <!-- Cortes (Notar que añadí la clase "check-corte" para identificarlos) -->
-        <button class="categoria-btn" onclick="toggleCategoria('cat-cortes')">✂️ Cortes en Tendencia <span>▼</span></button>
-        <div id="cat-cortes" class="categoria-contenido show">
-             <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Skin Fade" onchange="toggleServicioCheckbox(this, 180, 'Skin Fade')"><div><strong>Skin Fade</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Desvanecido impecable hasta la piel.</p></div></div><div class="precio">$180</div></label>
-             <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Low Fade" onchange="toggleServicioCheckbox(this, 180, 'Low Fade')"><div><strong>Low Fade</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Degradado bajo manteniendo oscuridad.</p></div></div><div class="precio">$180</div></label>
-             <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Burst Fade" onchange="toggleServicioCheckbox(this, 180, 'Burst Fade')"><div><strong>Burst Fade</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Desvanecido semicircular.</p></div></div><div class="precio">$180</div></label>
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Textured Crop" onchange="toggleServicioCheckbox(this, 200, 'Textured Crop')"><div><strong>Textured Crop (French)</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Textura desordenada y flequillo</p></div></div><div class="precio">$200</div></label>
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Modern Mullet" onchange="toggleServicioCheckbox(this, 220, 'Modern Mullet')"><div><strong>Modern Mullet</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Volumen arriba y longitud en nuca</p></div></div><div class="precio">$220</div></label>
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Corte Brócoli" onchange="toggleServicioCheckbox(this, 250, 'Corte Brócoli')"><div><strong>Corte Brócoli (Zoomer)</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Rizos con volumen hacia la frente</p></div></div><div class="precio">$250</div></label>
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Buzz Cut" onchange="toggleServicioCheckbox(this, 150, 'Buzz Cut')"><div><strong>Buzz Cut (Rapado)</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Militar ultra corto con degradado</p></div></div><div class="precio">$150</div></label>
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Quiff Texturizado" onchange="toggleServicioCheckbox(this, 200, 'Quiff Texturizado')"><div><strong>Quiff Texturizado</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Acabado mate, despeinado y volumen</p></div></div><div class="precio">$200</div></label>
-        </div>
-
-        <!-- Barbas -->
-        <button class="categoria-btn" onclick="toggleCategoria('cat-barba')">🧔 Arreglo de Barba <span>▼</span></button>
-        <div id="cat-barba" class="categoria-contenido">
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input" type="checkbox" value="Perfilado de Barba" onchange="toggleServicioCheckbox(this, 150, 'Perfilado de Barba')"><div><strong>Perfilado de Barba</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Alineación perfecta con navaja</p></div></div><div class="precio">$150</div></label>
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input" type="checkbox" value="Barba Premium" onchange="toggleServicioCheckbox(this, 200, 'Barba Premium')"><div><strong>Barba Premium con Toalla</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Toalla caliente, aceites y masaje</p></div></div><div class="precio">$200</div></label>
-        </div>
-
-        <!-- Faciales -->
-        <button class="categoria-btn" onclick="toggleCategoria('cat-faciales')">💆 Masajes y Faciales <span>▼</span></button>
-        <div id="cat-faciales" class="categoria-contenido">
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input" type="checkbox" value="Limpieza Express" onchange="toggleServicioCheckbox(this, 180, 'Limpieza Express')"><div><strong>Limpieza Facial Express</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Exfoliación y mascarilla negra</p></div></div><div class="precio">$180</div></label>
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input" type="checkbox" value="Facial Completo" onchange="toggleServicioCheckbox(this, 300, 'Facial Completo + Masaje')"><div><strong>Facial Completo + Masaje</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Limpieza profunda y masaje relajante</p></div></div><div class="precio">$300</div></label>
-        </div>
-
-        <!-- Combos Especiales -->
-        <button class="categoria-btn" onclick="toggleCategoria('cat-combos')">🔥 Combos Especiales <span>▼</span></button>
-        <div id="cat-combos" class="categoria-contenido">
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Combo Ejecutivo" onchange="toggleServicioCheckbox(this, 300, 'Combo Ejecutivo')"><div><strong>Combo Ejecutivo</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Corte Fade + Perfilado de Barba</p></div></div><div class="precio">$300</div></label>
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Padre e Hijo" onchange="toggleServicioCheckbox(this, 320, 'Combo Padre e Hijo')"><div><strong>Combo Padre e Hijo</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Dos cortes continuos al mejor precio</p></div></div><div class="precio">$320</div></label>
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Cambio de Look Total" onchange="toggleServicioCheckbox(this, 750, 'Cambio de Look Total')"><div><strong>Cambio de Look Total</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Corte + Tinte/Decoloración + Barba</p></div></div><div class="precio">$750</div></label>
-            <label class="servicio-item"><div style="display: flex; align-items: center;"><input class="form-check-input check-corte" type="checkbox" value="Ritual VIP" onchange="toggleServicioCheckbox(this, 650, 'Ritual Lumina VIP')"><div><strong>Ritual Lumina VIP</strong><p style="margin: 0; color: #aaa; font-size: 0.85rem;">Corte + Barba Premium + Facial Completo</p></div></div><div class="precio">$650</div></label>
-        </div>
-
-        <h3 class="titulo-seccion" style="margin-top: 40px;">2. Fecha, Hora y Pago</h3>
-        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 15px;">
-            <div class="input-grupo" style="flex: 1; min-width: 200px;">
-                <label class="input-label">Elige la fecha:</label>
-                <input type="date" id="selector-fecha" class="input-oscuro" onchange="validarDisponibilidad()">
-            </div>
-            <div class="input-grupo" style="flex: 1; min-width: 200px;">
-                <label class="input-label">Elige la hora (10:00 a 20:00):</label>
-                <input type="time" id="selector-hora" class="input-oscuro" min="10:00" max="20:00" value="10:00" onchange="validarDisponibilidad()">
-            </div>
-        </div>
-        
-        <div class="input-grupo">
-            <label class="input-label">Método de Pago (Para asegurar el lugar):</label>
-            <select id="selector-pago" class="input-oscuro" onchange="actualizarResumen()">
-                <option value="Efectivo (Pago en sucursal)">Efectivo (Pago en sucursal)</option>
-                <option value="Transferencia (Anticipo 50%)">Transferencia (Anticipo 50% para asegurar lugar)</option>
-            </select>
-        </div>
-
-        <p id="alerta-ocupado" style="color: #ff4d4d; font-size: 0.95rem; display: none; margin-top: 15px; padding: 10px; background: rgba(255,0,0,0.1); border-left: 3px solid #ff4d4d;">⚠️ <strong>Horario fuera de servicio u ocupado.</strong> Nuestro horario es de 10 AM a 8 PM. Verifica tu selección o el barbero ya tiene cita.</p>
-    </div>
-
-    <div class="col-reserva card">
-        <h3 class="titulo-seccion">Tu reserva</h3>
-        
-        <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">SUCURSAL</p>
-        <p id="resumen-sucursal" style="font-weight: bold; margin: 0 0 15px 0; font-size: 1.1rem; color: #fff;">Centro</p>
-
-        <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">BARBERO SELECCIONADO</p>
-        <p id="resumen-barbero" style="font-weight: bold; margin: 0 0 15px 0; font-size: 1.1rem; color: #d4af37;">Cualquier barbero disponible</p>
-
-        <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">SERVICIOS</p>
-        <p id="resumen-servicios" style="font-weight: bold; margin: 0 0 15px 0; font-size: 0.95rem; color: #fff;">Ningún servicio seleccionado</p>
-        
-        <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">FECHA Y HORA</p>
-        <p id="resumen-fecha-hora" style="font-weight: bold; margin: 0 0 15px 0; color: #fff;">Selecciona fecha y hora</p>
-
-        <p style="color: #aaa; font-size: 0.9rem; margin: 5px 0;">MÉTODO DE PAGO</p>
-        <p id="resumen-pago" style="font-weight: bold; margin: 0 0 20px 0; color: #4CAF50;">Efectivo (Pago en sucursal)</p>
-        
-        <hr style="border-color: #333; margin-bottom: 20px;">
-        
-        <!-- Contenedor del Total con Descuento -->
-        <div style="text-align: right; margin-bottom: 15px;">
-            <div id="resumen-descuento" style="color: #4CAF50; font-size: 0.95rem; display: none; margin-bottom: 5px;"></div>
-            <div style="display: flex; justify-content: space-between; font-size: 1.3rem;">
-                <span style="color: white;">Total</span>
-                <span class="precio" id="resumen-total">$0</span>
-            </div>
-        </div>
-
-        <button class="btn-confirmar" id="btn-submit">Confirmar reserva</button>
-    </div>
-</div>
+</form>
 
 <script>
-    // NUEVO SISTEMA DE CARRITO INTELIGENTE
     let carrito = [];
-    let cuponActivo = '@Html.Raw(cuponSeleccionado)' === 'LUMINA-FREE';
-
-    const barberosPorSucursal = {
-        "Centro": [
-            { nombre: "Cualquier barbero disponible", valor: "Cualquier barbero disponible" },
-            { nombre: "Irvin Chavarría (Cortes urbanos / Fade)", valor: "Irvin Chavarría" },
-            { nombre: "Fernando Rodríguez (Cortes clásicos / Barba)", valor: "Fernando Rodríguez" },
-            { nombre: "Geovany Iván (Masajes / Rituales VIP)", valor: "Geovany Iván" }
-        ],
-        "Plaza": [
-            { nombre: "Cualquier barbero disponible", valor: "Cualquier barbero disponible" },
-            { nombre: "Diego Silva (Colorimetría / Faciales)", valor: "Diego Silva" },
-            { nombre: "Erick Ulises (Diseño / Freestyle)", valor: "Erick Ulises" }
-        ]
-    };
+    
+    // El JS inyecta el TEXTO en la UI, pero el select envía el VALOR (Id del barbero) a SQL Server
+    const barberosPorSucursal = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(barberosPorSucursalData));
 
     function filtrarBarberos(barberoSeleccionadoPorUrl = null) {
-        const sucursalElegida = document.querySelector('input[name="sucursal"]:checked').value;
+        const sucursalElegida = document.querySelector('input[name="SucursalId"]:checked');
+        const nombreSucursal = sucursalElegida.nextSibling.textContent.trim(); // "Centro" o "Plaza"
         const selectorBarbero = document.getElementById('selector-barbero');
-        selectorBarbero.innerHTML = '';
         
-        barberosPorSucursal[sucursalElegida].forEach(barbero => {
-            let option = document.createElement('option');
-            option.value = barbero.valor;
-            option.text = barbero.nombre;
-            selectorBarbero.appendChild(option);
-        });
-
-        document.getElementById('resumen-sucursal').innerText = sucursalElegida;
-
+        selectorBarbero.innerHTML = '';
+        if (barberosPorSucursal[nombreSucursal]) {
+            barberosPorSucursal[nombreSucursal].forEach(barbero => {
+                let option = document.createElement('option');
+                option.value = barbero.valor;
+                option.text = barbero.nombre;
+                selectorBarbero.appendChild(option);
+            });
+        }
+        
+        document.getElementById('resumen-sucursal').innerText = nombreSucursal;
+        
         if (barberoSeleccionadoPorUrl && barberoSeleccionadoPorUrl !== 'Cualquier barbero') {
             for(let i=0; i<selectorBarbero.options.length; i++) {
-                if(selectorBarbero.options[i].value === barberoSeleccionadoPorUrl) {
+                if(selectorBarbero.options[i].text.includes(barberoSeleccionadoPorUrl)) {
                     selectorBarbero.selectedIndex = i;
                     break;
                 }
@@ -217,18 +237,15 @@
 
     function toggleCategoria(idCategoria) {
         const contenido = document.getElementById(idCategoria);
-        if (contenido.classList.contains('show')) { contenido.classList.remove('show'); } 
+        if (contenido.classList.contains('show')) { contenido.classList.remove('show'); }
         else { contenido.classList.add('show'); }
     }
 
-    // MODIFICADO: Agrega o quita del carrito y recalcula
     function toggleServicioCheckbox(checkbox, precio, nombreServicio) {
         let elemento = checkbox.closest('.servicio-item');
-        let esCorte = checkbox.classList.contains('check-corte'); // Verificamos si es un corte para el descuento
-
         if (checkbox.checked) {
             elemento.classList.add('selected');
-            carrito.push({ nombre: nombreServicio, precio: precio, esCorte: esCorte });
+            carrito.push({ nombre: nombreServicio, precio: precio });
         } else {
             elemento.classList.remove('selected');
             carrito = carrito.filter(s => s.nombre !== nombreServicio);
@@ -236,44 +253,17 @@
         renderizarCarrito();
     }
 
-    // NUEVA FUNCIÓN: Dibuja el carrito y aplica descuento si hay cupón
     function renderizarCarrito() {
-        let subtotal = 0;
-        let descuento = 0;
-        let htmlServicios = [];
-        let corteYaDescontado = false;
+        let total = 0;
+        carrito.forEach(item => { total += item.precio; });
 
-        carrito.forEach(item => {
-            subtotal += item.precio;
-            
-            // Si el cupón está activo, es un corte, y no hemos hecho descuento aún
-            if (cuponActivo && item.esCorte && !corteYaDescontado) {
-                descuento += item.precio; // Descontamos el precio del corte
-                htmlServicios.push(`${item.nombre} <span style="color:#4CAF50; font-size: 0.85em;">(Corte GRATIS)</span>`);
-                corteYaDescontado = true;
-            } else {
-                htmlServicios.push(item.nombre);
-            }
-        });
-
-        let totalFinal = subtotal - descuento;
-
-        // Actualizamos HTML
-        document.getElementById('resumen-servicios').innerHTML = htmlServicios.length > 0 ? htmlServicios.join('<br>') : 'Ningún servicio seleccionado';
-        document.getElementById('resumen-total').innerText = '$' + totalFinal;
-
-        // Mostrar u ocultar letrero de descuento
-        const letreroDescuento = document.getElementById('resumen-descuento');
-        if (descuento > 0) {
-            letreroDescuento.style.display = 'block';
-            letreroDescuento.innerText = `Cupón Prestige: -$${descuento}`;
-        } else {
-            letreroDescuento.style.display = 'none';
-        }
+        document.getElementById('resumen-servicios').innerHTML = carrito.length > 0 ? carrito.map(i => i.nombre).join('<br>') : 'Ningún servicio seleccionado';
+        document.getElementById('resumen-total').innerText = '$' + total;
     }
 
     function actualizarResumen() {
-        document.getElementById('resumen-barbero').innerText = document.getElementById('selector-barbero').value;
+        const selectorBarbero = document.getElementById('selector-barbero');
+        document.getElementById('resumen-barbero').innerText = selectorBarbero.options[selectorBarbero.selectedIndex].text;
         document.getElementById('resumen-pago').innerText = document.getElementById('selector-pago').value;
         validarDisponibilidad();
     }
@@ -283,11 +273,11 @@
         const horaVal = document.getElementById('selector-hora').value;
         const alerta = document.getElementById('alerta-ocupado');
         const btnSubmit = document.getElementById('btn-submit');
-        
         const horaMinutos = parseInt(horaVal.replace(':', ''));
+        
         let fueraDeHorario = horaMinutos < 1000 || horaMinutos > 2000;
-        let ocupado = horaVal === "14:00"; 
-
+        let ocupado = horaVal === "14:00"; // Simulación JS
+        
         if (fueraDeHorario || ocupado) {
             alerta.style.display = 'block';
             btnSubmit.style.background = '#333';
@@ -303,7 +293,7 @@
             btnSubmit.innerText = 'Confirmar reserva';
             btnSubmit.disabled = false;
         }
-
+        
         if(fechaVal && horaVal) {
             const opciones = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
             const fechaObj = new Date(fechaVal + 'T00:00:00');
@@ -314,23 +304,19 @@
     document.addEventListener("DOMContentLoaded", function() {
         const inputFecha = document.getElementById('selector-fecha');
         const hoy = new Date().toISOString().split('T')[0];
-        inputFecha.value = hoy; inputFecha.min = hoy; 
-
-        let barberoUrl = '@Html.Raw(barberoSeleccionado)';
-        if (barberoUrl && barberoUrl !== 'Cualquier barbero') {
-            if (barberosPorSucursal["Centro"].some(b => b.valor === barberoUrl)) { document.querySelector('input[value="Centro"]').checked = true; } 
-            else if (barberosPorSucursal["Plaza"].some(b => b.valor === barberoUrl)) { document.querySelector('input[value="Plaza"]').checked = true; }
-        }
+        inputFecha.value = hoy; 
+        inputFecha.min = hoy;
         
-        filtrarBarberos(barberoUrl); 
-
-        let corteUrl = '@Html.Raw(corteSeleccionado)';
+        let barberoUrl = @Json.Serialize(barberoSeleccionado);
+        let corteUrl = @Json.Serialize(corteSeleccionado);
+        
+        filtrarBarberos(barberoUrl);
+        
         if(corteUrl) {
-            let checkboxes = document.querySelectorAll('.check-corte');
+            let checkboxes = document.querySelectorAll('.form-check-input');
             checkboxes.forEach(cb => {
-                if(cb.value === corteUrl) {
+                if(cb.nextElementSibling.querySelector('strong').innerText.includes(corteUrl)) {
                     cb.checked = true;
-                    // Llama a la nueva función
                     toggleServicioCheckbox(cb, parseInt(cb.closest('.servicio-item').querySelector('.precio').innerText.replace('$','')), corteUrl);
                 }
             });

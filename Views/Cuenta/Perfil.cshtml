@@ -19,7 +19,7 @@
                 </div>
                 
                 <h3 class="text-xl font-bold text-white mb-1">@ViewBag.Nombre</h3>
-                <p class="text-[#d4af37] text-xs font-bold tracking-widest uppercase mb-4">Admin</p>
+                <p class="text-[#d4af37] text-xs font-bold tracking-widest uppercase mb-4">@Context.Session.GetString("UsuarioRol")</p>
                 <p class="text-gray-400 text-sm mb-4">Miembro desde: @ViewBag.MiembroDesde</p>
                 
                 <!-- Selector de archivo oculto y botón que lo activa -->

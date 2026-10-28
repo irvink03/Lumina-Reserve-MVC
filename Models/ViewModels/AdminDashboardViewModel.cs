@@ -16,29 +16,29 @@ namespace Lumina_Reserve_MVC.Models.ViewModels
     }
 
     // Sub-clases para las listas y tablas
-    public class CitaViewModel 
+    public class CitaViewModel
     {
-        public string Hora { get; set; }
-        public string Cliente { get; set; }
-        public string Servicio { get; set; }
-        public string Barbero { get; set; }
-        public string Estado { get; set; }
+        public string Hora { get; set; } = string.Empty;
+        public string Cliente { get; set; } = string.Empty;
+        public string Servicio { get; set; } = string.Empty;
+        public string Barbero { get; set; } = string.Empty;
+        public string Estado { get; set; } = string.Empty;
     }
 
-    public class RendimientoBarberoViewModel 
+    public class RendimientoBarberoViewModel
     {
-        public string Nombre { get; set; }
+        public string Nombre { get; set; } = string.Empty;
         public decimal Ingresos { get; set; }
         public int Cortes { get; set; }
         public int Porcentaje { get; set; }
     }
 
-    public class PagoViewModel 
+    public class PagoViewModel
     {
-        public string Cliente { get; set; }
-        public string Servicio { get; set; }
-        public string MetodoPago { get; set; }
-        public string Barbero { get; set; }
+        public string Cliente { get; set; } = string.Empty;
+        public string Servicio { get; set; } = string.Empty;
+        public string MetodoPago { get; set; } = string.Empty;
+        public string Barbero { get; set; } = string.Empty;
         public decimal Total { get; set; }
     }
 }

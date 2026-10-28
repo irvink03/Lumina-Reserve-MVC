@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Lumina-Reserve-MVC.styles.css" asp-append-version="true" />
-
     <style>
         .text-gold { color: #d4af37; }
         .bg-gold { background-color: #d4af37; }
@@ -23,11 +22,10 @@
     <header>
         <nav class="bg-[#1e1e1e] border-b border-gray-800 shadow-md relative z-50">
             @{
-                // SIMULADOR DE SESIÓN
-                string userRole = "Admin"; 
-                string userName = "Irving"; 
-                string userEmail = "irving@lumina.com";
-                bool isLogged = (userRole != "Visitante");
+                // Corrección aplicada aquí agregando el signo de interrogación a string?
+                string? userName = Context.Session.GetString("UsuarioNombre");
+                bool isLogged = !string.IsNullOrEmpty(userName);
+                string? userRole = Context.Session.GetString("UsuarioRol") ?? "Cliente"; 
             }
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-20 items-center">
@@ -40,10 +38,6 @@
                     
                     <div class="hidden md:flex space-x-6 items-center">
                         <a asp-controller="Home" asp-action="Index" class="text-gray-300 hover-gold transition-colors font-medium" style="text-decoration: none;">Inicio</a>
-                        
-                        @if(isLogged) {
-                        }
-
                         <a asp-controller="Nosotros" asp-action="NuestroEquipo" class="text-gray-300 hover-gold transition-colors font-medium" style="text-decoration: none;">Equipo</a>
                         <a asp-controller="Portafolio" asp-action="Portafolio" class="text-gray-300 hover-gold transition-colors font-medium" style="text-decoration: none;">Fotos / Trabajos</a>
                         <a asp-controller="Nosotros" asp-action="Ubicacion" class="text-gray-300 hover-gold transition-colors font-medium" style="text-decoration: none;">Ubicación</a>
@@ -54,27 +48,32 @@
                         </a>
                     </div>
 
-                    <div class="flex items-center relative ml-4">
-                        @if(isLogged) {
+                    <div class="flex items-center relative ml-4 gap-3">
+                        @if(!isLogged) {
+                            <a asp-controller="Cuenta" asp-action="Login" class="text-gray-300 hover:text-[#d4af37] transition-colors font-medium px-3 py-2 text-sm" style="text-decoration: none;">
+                                Iniciar Sesión
+                            </a>
+                            <a asp-controller="Cuenta" asp-action="Registro" class="bg-[#d4af37] text-black hover:bg-[#b5952f] transition-colors font-bold px-4 py-2 rounded text-sm uppercase tracking-wide" style="text-decoration: none;">
+                                Registrarse
+                            </a>
+                        } else {
                             <button id="userMenuBtn" class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors focus:outline-none cursor-pointer p-1 rounded-full hover:bg-[#262626]">
                                 <div class="w-10 h-10 rounded-full bg-stripes border-2 border-gray-600 flex items-center justify-center overflow-hidden shadow-inner">
                                     <i class="fa-solid fa-user text-gray-400 opacity-50"></i>
                                 </div>
+                                <span class="text-sm font-semibold text-gray-200 hidden sm:inline">@userName</span>
                                 <i class="fa-solid fa-ellipsis-vertical text-xl px-2"></i>
                             </button>
-
+                            
                             <div id="userDropdown" class="hidden absolute right-0 top-14 mt-2 w-64 bg-[#1a1a1a] border border-gray-800 rounded-xl shadow-2xl py-2 z-50 transition-opacity">
-                                
                                 <div class="px-4 py-3 border-b border-gray-800">
                                     <p class="text-white text-sm font-bold m-0 leading-tight">@userName</p>
-                                    <p class="text-gray-400 text-xs m-0 truncate">@userEmail</p>
                                     <span class="inline-block mt-2 bg-black border border-[#d4af37] text-[#d4af37] text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest">
                                         @userRole
                                     </span>
                                 </div>
                                 
                                 <div class="py-2">
-                                    <!-- RUTAS CONECTADAS: Perfil e Historial -->
                                     <a asp-controller="Cuenta" asp-action="Perfil" class="block px-4 py-2 text-sm text-gray-300 hover:bg-[#262626] hover:text-[#d4af37] transition-colors" style="text-decoration: none;">
                                         <i class="fa-regular fa-id-badge w-5 text-center mr-1"></i> Mi Perfil
                                     </a>
@@ -82,7 +81,7 @@
                                         <i class="fa-solid fa-clock-rotate-left w-5 text-center mr-1"></i> Historial de Citas
                                     </a>
                                     
-                                    @if(userRole == "Admin") {
+                                    @if(userRole == "Administrador") {
                                         <div class="border-t border-gray-800 my-1"></div>
                                         <a asp-controller="Admin" asp-action="Dashboard" class="block px-4 py-2 text-sm text-red-400 hover:bg-red-900 hover:bg-opacity-30 transition-colors" style="text-decoration: none;">
                                             <i class="fa-solid fa-chart-line w-5 text-center mr-1"></i> Panel de Administración
@@ -95,10 +94,6 @@
                                     </a>
                                 </div>
                             </div>
-                        } else {
-                            <a asp-controller="Cuenta" asp-action="Login" class="text-gray-300 hover:text-[#d4af37] transition-colors flex items-center gap-2 font-medium bg-[#1a1a1a] border border-gray-700 px-4 py-2 rounded-full" style="text-decoration: none;">
-                                <i class="fa-regular fa-user text-lg"></i> Acceder
-                            </a>
                         }
                     </div>
                     
@@ -123,7 +118,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const userMenuBtn = document.getElementById('userMenuBtn');

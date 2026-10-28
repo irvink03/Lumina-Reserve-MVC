@@ -1,0 +1,63 @@
+@{
+    ViewData["Title"] = "Registro de Usuario";
+}
+
+<div class="flex items-center justify-center min-h-[85vh] px-4 py-12">
+    <div class="bg-[#1a1a1a] border border-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-lg">
+        
+        <h2 class="text-2xl font-bold text-center text-[#d4af37] mb-6 tracking-wide">Crear Cuenta</h2>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="bg-red-900 bg-opacity-30 border border-red-500 text-red-300 px-4 py-3 rounded-lg mb-6 text-sm text-center">
+                @TempData["Error"]
+            </div>
+        }
+
+        <form asp-controller="Cuenta" asp-action="Registro" method="post" class="space-y-5">
+            <div>
+                <label class="block text-gray-400 text-sm mb-2 font-medium">Nombre Completo</label>
+                <input type="text" name="nombreCompleto" class="w-full bg-[#262626] text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-[#d4af37] transition-colors" placeholder="Tu nombre" required />
+            </div>
+
+            <div>
+                <label class="block text-gray-400 text-sm mb-2 font-medium">Correo Electrónico</label>
+                <input type="email" name="correo" class="w-full bg-[#262626] text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-[#d4af37] transition-colors" placeholder="tucorreo@email.com" required />
+            </div>
+
+            <div>
+                <label class="block text-gray-400 text-sm mb-2 font-medium">Teléfono (WhatsApp)</label>
+                <input type="text" name="telefono" class="w-full bg-[#262626] text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-[#d4af37] transition-colors" placeholder="9611234567" />
+            </div>
+
+            <div>
+                <label class="block text-gray-400 text-sm mb-2 font-medium">Contraseña</label>
+                <input type="password" name="password" class="w-full bg-[#262626] text-white border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-[#d4af37] transition-colors" placeholder="••••••••" required />
+            </div>
+
+            <!-- SECCIÓN INFORMATIVA DE TELEGRAM -->
+            <div class="bg-[#141414] border border-[#d4af37] border-opacity-30 rounded-xl p-5 space-y-3 mt-4">
+                <div class="flex items-center gap-2 text-[#d4af37] font-semibold text-sm">
+                    <i class="fa-brands fa-telegram text-lg"></i> Verificación con Telegram Bot
+                </div>
+
+                <div class="text-xs text-gray-400 space-y-1 bg-[#1a1a1a] p-3 rounded-lg border border-gray-800">
+                    <p class="text-[#d4af37] font-semibold">Cómo iniciar sesión con seguridad:</p>
+                    <ol class="list-decimal list-inside space-y-1 text-gray-300">
+                        <li>Busca nuestro bot en Telegram: <span class="text-white font-mono">@@LuminaReserve_bot</span></li>
+                        <li>Inícialo escribiendo <span class="text-white font-mono">/start</span></li>
+                        <li>Envíale tu correo electrónico registrado para que te asigne tu código de acceso temporal.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-[#d4af37] text-black font-bold py-3 rounded-lg hover:bg-[#b5952f] transition-colors shadow-lg mt-4">
+                Registrarse
+            </button>
+        </form>
+
+        <div class="text-center mt-6">
+            <p class="text-gray-400 text-sm">¿Ya tienes una cuenta? <a asp-action="Login" class="text-[#d4af37] hover:underline font-medium">Inicia sesión aquí</a></p>
+        </div>
+    </div>
+</div>

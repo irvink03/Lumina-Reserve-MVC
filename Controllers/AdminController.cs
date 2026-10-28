@@ -17,6 +17,12 @@ namespace Lumina_Reserve_MVC.Controllers
 
         public IActionResult Dashboard()
         {
+            // Solo el administrador puede entrar al panel
+            if (HttpContext.Session.GetString("UsuarioRol") != "Administrador")
+            {
+                return RedirectToAction("Login", "Cuenta");
+            }
+
             /* 
                CUANDO TUS TABLAS ESTÉN LISTAS, REEMPLAZARÁS LOS VALORES MANUALES CON CONSULTAS REALES. EJEMPLO:
                var ingresosReales = _context.Pagos.Where(p => p.Fecha.Date == DateTime.Today).Sum(p => p.Total);

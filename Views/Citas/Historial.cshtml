@@ -1,0 +1,81 @@
+@model List<Lumina_Reserve_MVC.Models.Cita>
+@{
+    ViewData["Title"] = "Historial de Citas";
+}
+
+<div class="bg-[#121212] min-h-screen py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-800">
+    <div class="max-w-5xl mx-auto">
+
+        <h2 class="text-3xl font-bold text-white uppercase tracking-widest mb-8 border-b border-gray-800 pb-4">
+            Historial de <span class="text-[#d4af37]">Citas</span>
+        </h2>
+
+        @if (!Model.Any())
+        {
+            <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl p-10 text-center shadow-lg">
+                <i class="fa-solid fa-calendar-xmark text-5xl text-gray-600 mb-4"></i>
+                <p class="text-gray-300 text-lg mb-2">Aún no tienes citas registradas.</p>
+                <p class="text-gray-500 text-sm mb-6">Cuando agendes una, aparecerá aquí.</p>
+                <a asp-controller="Citas" asp-action="AgendarCita"
+                   class="inline-block bg-[#d4af37] text-black font-bold px-6 py-3 rounded hover:bg-[#b5952f] transition-colors uppercase tracking-wide text-sm"
+                   style="text-decoration: none;">
+                    Agendar mi primera cita
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="space-y-4">
+                @foreach (var cita in Model)
+                {
+                    var servicios = string.Join(", ", cita.CitaCortes.Select(cc => cc.Corte.Nombre));
+                    var total = cita.Pago != null ? cita.Pago.MontoTotal : cita.CitaCortes.Sum(cc => cc.PrecioCobrado);
+                    var estado = string.IsNullOrEmpty(cita.Estado) ? "Pendiente" : cita.Estado;
+                    var estadoClase = estado.ToLower() switch
+                    {
+                        "completada" => "border-green-500 text-green-400",
+                        "cancelada" => "border-red-500 text-red-400",
+                        _ => "border-[#d4af37] text-[#d4af37]"
+                    };
+
+                    <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl p-6 shadow-lg">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+
+                            <div>
+                                <p class="text-white text-xl font-bold m-0">
+                                    @cita.FechaCita.ToString("dd/MM/yyyy")
+                                    <span class="text-[#d4af37]">· @cita.HoraCita.ToString("HH:mm")</span>
+                                </p>
+                                <p class="text-gray-400 text-sm mt-1 mb-0">
+                                    <i class="fa-solid fa-location-dot w-4 text-center mr-1"></i>@cita.Sucursal.Nombre
+                                </p>
+                                <p class="text-gray-400 text-sm mt-1 mb-0">
+                                    <i class="fa-solid fa-scissors w-4 text-center mr-1"></i>Barbero: @cita.Barbero.Usuario.NombreCompleto
+                                </p>
+                            </div>
+
+                            <span class="self-start inline-block bg-black border @estadoClase text-[10px] font-bold px-3 py-1 rounded uppercase tracking-widest">
+                                @estado
+                            </span>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-gray-800 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+                            <p class="text-gray-300 text-sm m-0">
+                                <span class="text-gray-500">Servicios:</span>
+                                @(string.IsNullOrEmpty(servicios) ? "Sin servicios registrados" : servicios)
+                            </p>
+                            <p class="text-white font-bold text-lg m-0">
+                                Total: <span class="text-[#d4af37]">$@total.ToString("N2")</span>
+                                @if (cita.Pago != null)
+                                {
+                                    <span class="text-gray-500 text-xs font-normal ml-2">(@cita.Pago.MetodoPago)</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</div>
